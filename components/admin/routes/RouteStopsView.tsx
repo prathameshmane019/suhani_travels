@@ -53,24 +53,9 @@ export function RouteStopsView({ open, onClose, routeName, stops }: RouteStopsVi
                   <div className="text-base font-medium text-slate-900">
                     {stop.name}
                   </div>
-                  <div className="mt-1 flex gap-6">
-                    {stop.arrivalTime && (
-                      <div className="text-sm">
-                        <span className="text-slate-500">Arrival: </span>
-                        <span className="text-slate-700 font-medium">{stop.arrivalTime}</span>
-                      </div>
-                    )}
-                    {stop.departureTime && (
-                      <div className="text-sm">
-                        <span className="text-slate-500">Departure: </span>
-                        <span className="text-slate-700 font-medium">{stop.departureTime}</span>
-                      </div>
-                    )}
-                  </div>
-                  {index < stops.length - 1 && (
-                    <div className="mt-2 text-xs text-slate-500">
-                      {/* You can add journey duration between stops here if needed */}
-                      Journey to next stop: ~{index === 0 ? '3h' : '13h 15m'}
+                  {stop.coordinates && (
+                    <div className="mt-1 text-sm text-slate-500">
+                      {stop.coordinates.latitude.toFixed(6)}, {stop.coordinates.longitude.toFixed(6)}
                     </div>
                   )}
                 </div>

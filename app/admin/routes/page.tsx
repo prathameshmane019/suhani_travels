@@ -22,6 +22,18 @@ const RoutesPage = () => {
     console.log('Editing route:', data);
   };
 
+  const sampleRoute: RouteData = {
+    id: 'RT0001',
+    name: 'Mumbai - Pune - Bangalore Express',
+    stops: [
+      { id: '1', name: 'Mumbai', sequence: 1, distanceFromLast: 0, expectedDuration: 180 },
+      { id: '2', name: 'Pune', sequence: 2, distanceFromLast: 150, expectedDuration: 780 },
+      { id: '3', name: 'Bangalore', sequence: 3, distanceFromLast: 850, expectedDuration: 0 }
+    ],
+    totalDistance: 1000,
+    status: 'active'
+  };
+
   return (
     <div className="space-y-8">
       <div className="flex items-center justify-between">
@@ -49,9 +61,7 @@ const RoutesPage = () => {
                 <th className="px-6 py-4 text-left text-sm font-medium text-slate-500">Route ID</th>
                 <th className="px-6 py-4 text-left text-sm font-medium text-slate-500">Route Name</th>
                 <th className="px-6 py-4 text-left text-sm font-medium text-slate-500">Stops</th>
-                <th className="px-6 py-4 text-left text-sm font-medium text-slate-500">Distance</th>
-                <th className="px-6 py-4 text-left text-sm font-medium text-slate-500">First Departure</th>
-                <th className="px-6 py-4 text-left text-sm font-medium text-slate-500">Last Arrival</th>
+                <th className="px-6 py-4 text-left text-sm font-medium text-slate-500">Total Distance</th>
                 <th className="px-6 py-4 text-left text-sm font-medium text-slate-500">Status</th>
                 <th className="px-6 py-4 text-left text-sm font-medium text-slate-500">Actions</th>
               </tr>
@@ -60,26 +70,16 @@ const RoutesPage = () => {
               {[...Array(5)].map((_, index) => (
                 <tr key={index} className="hover:bg-slate-50">
                   <td className="px-6 py-4 text-sm text-slate-600">RT{String(index + 1).padStart(4, '0')}</td>
-                  <td className="px-6 py-4 text-sm text-slate-600">Mumbai - Pune - Bangalore Express</td>
+                  <td className="px-6 py-4 text-sm text-slate-600">{sampleRoute.name}</td>
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-1.5">
                       <span className="inline-flex items-center px-2 py-0.5 text-xs font-medium bg-blue-100 text-blue-800 rounded-full">
-                        3 stops
+                        {sampleRoute.stops.length} stops
                       </span>
                       <button 
                         className="text-blue-600 text-xs hover:underline"
                         onClick={() => {
-                          setSelectedRoute({
-                            id: `RT${String(index + 1).padStart(4, '0')}`,
-                            name: 'Mumbai - Pune - Bangalore Express',
-                            stops: [
-                              { id: '1', name: 'Mumbai', sequence: 0, arrivalTime: null, departureTime: '06:00' },
-                              { id: '2', name: 'Pune', sequence: 1, arrivalTime: '09:00', departureTime: '09:15' },
-                              { id: '3', name: 'Bangalore', sequence: 2, arrivalTime: '22:30', departureTime: null }
-                            ],
-                            distance: 1400,
-                            status: 'active'
-                          });
+                          setSelectedRoute({ ...sampleRoute, id: `RT${String(index + 1).padStart(4, '0')}` });
                           setIsViewStopsOpen(true);
                         }}
                       >
@@ -87,9 +87,7 @@ const RoutesPage = () => {
                       </button>
                     </div>
                   </td>
-                  <td className="px-6 py-4 text-sm text-slate-600">1,400 km</td>
-                  <td className="px-6 py-4 text-sm text-slate-600">06:00 AM</td>
-                  <td className="px-6 py-4 text-sm text-slate-600">10:30 PM</td>
+                  <td className="px-6 py-4 text-sm text-slate-600">{sampleRoute.totalDistance} km</td>
                   <td className="px-6 py-4">
                     <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800">
                       Active
@@ -100,17 +98,7 @@ const RoutesPage = () => {
                       <button 
                         className="text-slate-600 hover:text-emerald-600"
                         onClick={() => {
-                          setSelectedRoute({
-                            id: `RT${String(index + 1).padStart(4, '0')}`,
-                            name: 'Mumbai - Pune - Bangalore Express',
-                            stops: [
-                              { id: '1', name: 'Mumbai', sequence: 0, arrivalTime: null, departureTime: '06:00' },
-                              { id: '2', name: 'Pune', sequence: 1, arrivalTime: '09:00', departureTime: '09:15' },
-                              { id: '3', name: 'Bangalore', sequence: 2, arrivalTime: '22:30', departureTime: null }
-                            ],
-                            distance: 1400,
-                            status: 'active'
-                          });
+                          setSelectedRoute({ ...sampleRoute, id: `RT${String(index + 1).padStart(4, '0')}` });
                           setIsEditModalOpen(true);
                         }}
                       >
@@ -153,7 +141,7 @@ const RoutesPage = () => {
         initialData={selectedRoute ? {
           name: selectedRoute.name,
           stops: selectedRoute.stops.map(({ id, ...stop }) => stop),
-          distance: selectedRoute.distance,
+          totalDistance: selectedRoute.totalDistance,
           status: selectedRoute.status,
           description: selectedRoute.description,
         } : undefined}

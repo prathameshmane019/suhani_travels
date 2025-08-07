@@ -2,13 +2,12 @@
 
 import { useState, useEffect } from 'react';
 import { Plus, Trash2 } from 'lucide-react';
-import { Stop } from '@/types/route';
+import { RouteStop, RouteFormData } from '@/types/route';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { RouteFormData } from '@/types/route';
 import { cn } from '@/lib/utils';
 
 interface RouteFormProps {
@@ -22,10 +21,10 @@ interface RouteFormProps {
 const defaultFormData: RouteFormData = {
   name: '',
   stops: [
-    { name: '', sequence: 0, arrivalTime: null, departureTime: null },
-    { name: '', sequence: 1, arrivalTime: null, departureTime: null }
+    { name: '', sequence: 1, distanceFromLast: 0, expectedDuration: 0 },
+    { name: '', sequence: 2, distanceFromLast: 0, expectedDuration: 0 }
   ],
-  distance: 0,
+  totalDistance: 0,
   status: 'active',
 };
 
@@ -33,7 +32,6 @@ export function RouteForm({ open, onClose, onSubmit, initialData, mode }: RouteF
   const [formData, setFormData] = useState<RouteFormData>(defaultFormData);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Update form data when initialData changes or modal opens
   useEffect(() => {
     if (open) {
       setFormData(initialData ? { ...defaultFormData, ...initialData } : defaultFormData);
@@ -47,9 +45,9 @@ export function RouteForm({ open, onClose, onSubmit, initialData, mode }: RouteF
         ...formData.stops,
         {
           name: '',
-          sequence: formData.stops.length,
-          arrivalTime: null,
-          departureTime: null
+          sequence: formData.stops.length + 1,
+          distanceFromLast: 0,
+          expectedDuration: 0
         }
       ]
     });
@@ -57,9 +55,8 @@ export function RouteForm({ open, onClose, onSubmit, initialData, mode }: RouteF
 
   const removeStop = (index: number) => {
     const newStops = formData.stops.filter((_, i) => i !== index);
-    // Update sequences after removal
     newStops.forEach((stop, i) => {
-      stop.sequence = i;
+      stop.sequence = i + 1;
     });
     setFormData({
       ...formData,
@@ -67,11 +64,18 @@ export function RouteForm({ open, onClose, onSubmit, initialData, mode }: RouteF
     });
   };
 
-  const updateStop = (index: number, field: keyof Omit<Stop, 'id'>, value: string | number | null) => {
+  const updateStop = (index: number, field: keyof Omit<RouteStop, 'id'>, value: string | number | null) => {
     const newStops = [...formData.stops];
+    const numericFields = ['sequence', 'distanceFromLast', 'expectedDuration'];
+    
+    let parsedValue = value;
+    if (typeof value === 'string' && numericFields.includes(field)) {
+        parsedValue = parseFloat(value) || 0;
+    }
+
     newStops[index] = {
       ...newStops[index],
-      [field]: value
+      [field]: parsedValue
     };
     setFormData({
       ...formData,
@@ -101,7 +105,7 @@ export function RouteForm({ open, onClose, onSubmit, initialData, mode }: RouteF
               {mode === 'create' ? 'Add New Route' : 'Edit Route'}
             </DialogTitle>
             <p className="text-sm text-muted-foreground">
-              Add stops and their timings to create a route
+              Add stops and their details to create a route.
             </p>
           </DialogHeader>
         </div>
@@ -129,7 +133,7 @@ export function RouteForm({ open, onClose, onSubmit, initialData, mode }: RouteF
                       variant="outline" 
                       size="sm"
                       onClick={addStop}
-                      disabled={formData.stops.length >= 10}
+                      disabled={formData.stops.length >= 15}
                     >
                       <Plus className="w-4 h-4 mr-1" />
                       Add Stop
@@ -158,30 +162,32 @@ export function RouteForm({ open, onClose, onSubmit, initialData, mode }: RouteF
                         </div>
                         <div className="grid grid-cols-2 gap-2">
                           <div className="space-y-2">
-                            <Label htmlFor={`arrival-${index}`}>Arrival</Label>
+                            <Label htmlFor={`distanceFromLast-${index}`}>Distance From Last (km)</Label>
                             <Input
-                              id={`arrival-${index}`}
-                              type="time"
-                              value={stop.arrivalTime || ''}
-                              onChange={(e) => updateStop(index, 'arrivalTime', e.target.value)}
+                              id={`distanceFromLast-${index}`}
+                              type="number"
+                              value={stop.distanceFromLast}
+                              onChange={(e) => updateStop(index, 'distanceFromLast', e.target.value)}
                               disabled={index === 0}
                               required={index !== 0}
+                              min={0}
                             />
                           </div>
                           <div className="space-y-2">
-                            <Label htmlFor={`departure-${index}`}>Departure</Label>
+                            <Label htmlFor={`expectedDuration-${index}`}>Expected Duration (mins)</Label>
                             <Input
-                              id={`departure-${index}`}
-                              type="time"
-                              value={stop.departureTime || ''}
-                              onChange={(e) => updateStop(index, 'departureTime', e.target.value)}
+                              id={`expectedDuration-${index}`}
+                              type="number"
+                              value={stop.expectedDuration}
+                              onChange={(e) => updateStop(index, 'expectedDuration', e.target.value)}
                               disabled={index === formData.stops.length - 1}
                               required={index !== formData.stops.length - 1}
+                              min={0}
                             />
                           </div>
                         </div>
                         <div className="pt-8">
-                          {formData.stops.length > 2 && index !== 0 && index !== formData.stops.length - 1 && (
+                          {formData.stops.length > 2 && (
                             <Button
                               type="button"
                               variant="ghost"
@@ -200,12 +206,12 @@ export function RouteForm({ open, onClose, onSubmit, initialData, mode }: RouteF
 
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="distance">Total Distance (km)</Label>
+                    <Label htmlFor="totalDistance">Total Distance (km)</Label>
                     <Input
-                      id="distance"
+                      id="totalDistance"
                       type="number"
-                      value={formData.distance}
-                      onChange={(e) => setFormData({ ...formData, distance: Number(e.target.value) })}
+                      value={formData.totalDistance}
+                      onChange={(e) => setFormData({ ...formData, totalDistance: Number(e.target.value) })}
                       min={0}
                       step={0.1}
                       required

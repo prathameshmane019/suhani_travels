@@ -18,11 +18,19 @@ export default function SchedulesPage() {
     try {
       // TODO: API call to create schedule
       const newSchedule: Schedule = {
-        ...data,
         id: Math.random().toString(), // Temporary ID generation - replace with API response
+        routeId: data.routeId,
+        vehicleId: data.vehicleId,
+        operatingDays: data.operatingDays,
+        stopTimings: data.stopTimings,
+        fare: data.fare,
+        effectiveFrom: data.effectiveFrom,
+        effectiveTo: data.effectiveTo,
+        status: data.status,
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
       };
+      
       toast({
         title: 'Success',
         description: 'Schedule created successfully',
@@ -44,8 +52,16 @@ export default function SchedulesPage() {
     try {
       // TODO: API call to update schedule
       const updatedSchedule: Schedule = {
-        ...selectedSchedule,
-        ...data,
+        id: selectedSchedule.id,
+        routeId: data.routeId,
+        vehicleId: data.vehicleId,
+        operatingDays: data.operatingDays,
+        stopTimings: data.stopTimings,
+        fare: data.fare,
+        effectiveFrom: data.effectiveFrom,
+        effectiveTo: data.effectiveTo,
+        status: data.status,
+        createdAt: selectedSchedule.createdAt,
         updatedAt: new Date().toISOString(),
       };
       

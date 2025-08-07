@@ -91,6 +91,7 @@ interface SupportTicket {
   messages: TicketMessage[];
 }
 
+
 interface TicketMessage {
   id: string;
   ticketId: string;

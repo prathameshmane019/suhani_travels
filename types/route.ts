@@ -1,7 +1,17 @@
 export type DayOfWeek = 'monday' | 'tuesday' | 'wednesday' | 'thursday' | 'friday' | 'saturday' | 'sunday';
 
+// Generic stop interface for any type of stop
+export interface Stop {
+  id: string;
+  name: string;
+  coordinates?: {
+    latitude: number;
+    longitude: number;
+  };
+}
+
 // Base stop without timing information
-export interface RouteStop {
+export interface RouteStop extends Stop {
   id: string;
   name: string;
   sequence: number;
