@@ -1,18 +1,18 @@
 import express from 'express';
 import cors from 'cors';
 import morgan from 'morgan';
-import busesRouter from './routes/buses';
-import routesRouter from './routes/routes';
-import bookingsRouter from './routes/bookings';
-import refundsRouter from './routes/refunds';
-import supportRouter from './routes/support';
-import adminUsersRouter from './routes/adminUsers';
-import tripsRouter from './routes/trips';
-import busSchedulesRouter from './routes/busSchedules'; 
-import authRouter from './routes/auth'; // Import auth router
-import homeRouter from './routes/home';
-import agentRouter from './routes/agent'; // Import agent router Import busAuth router
-import auth from './middleware/auth'; // Import auth middleware
+import busesRouter from '../routes/buses';
+import routesRouter from '../routes/routes';
+import bookingsRouter from '../routes/bookings';
+import refundsRouter from '../routes/refunds';
+import supportRouter from '../routes/support';
+import adminUsersRouter from '../routes/adminUsers';
+import tripsRouter from '../routes/trips';
+import busSchedulesRouter from '../routes/busSchedules'; 
+import authRouter from '../routes/auth'; // Import auth router
+import homeRouter from '../routes/home';
+import agentRouter from '../routes/agent'; // Import agent router Import busAuth router
+import auth from '../middleware/auth'; // Import auth middleware
 import mongoose from 'mongoose';
 import path from 'path';
 
