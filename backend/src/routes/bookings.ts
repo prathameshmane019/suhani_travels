@@ -1,9 +1,7 @@
 import express, { Request, Response } from 'express';
 import { Booking } from '../models/booking';
 import { Trip } from '../models/trip';
-import mongoose from 'mongoose'; 
-const PDFDocument = require('pdfkit');
-
+import mongoose from 'mongoose';  
 const router = express.Router();
  
 interface IBookingTicket {
