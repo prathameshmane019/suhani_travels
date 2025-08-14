@@ -16,7 +16,13 @@ import auth from './middleware/auth'; // Import auth middleware
 import mongoose from 'mongoose';
 import path from 'path';
 
+ import dotenv from 'dotenv';
+    dotenv.config(); // Load environment variables from .env file
+
+    
 const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/suhani_bus';
+
+console.log(MONGO_URI);
 
 mongoose.connect(MONGO_URI)
   .then(() => console.log('Connected to MongoDB'))
@@ -24,6 +30,7 @@ mongoose.connect(MONGO_URI)
 
 const app = express();
 const PORT = process.env.PORT || 4000;
+
 
 app.use(cors());
 app.use(express.json());
