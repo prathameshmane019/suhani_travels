@@ -1,18 +1,18 @@
 import express from 'express';
 import cors from 'cors';
 import morgan from 'morgan';
-import busesRouter from '../routes/buses';
-import routesRouter from '../routes/routes';
-import bookingsRouter from '../routes/bookings';
-import refundsRouter from '../routes/refunds';
-import supportRouter from '../routes/support';
-import adminUsersRouter from '../routes/adminUsers';
-import tripsRouter from '../routes/trips';
-import busSchedulesRouter from '../routes/busSchedules'; 
-import authRouter from '../routes/auth'; // Import auth router
-import homeRouter from '../routes/home';
-import agentRouter from '../routes/agent'; // Import agent router Import busAuth router
-import auth from '../middleware/auth'; // Import auth middleware
+import busesRouter from './routes/buses';
+import routesRouter from './routes/routes';
+import bookingsRouter from './routes/bookings';
+import refundsRouter from './routes/refunds';
+import supportRouter from './routes/support';
+import adminUsersRouter from './routes/adminUsers';
+import tripsRouter from './routes/trips';
+import busSchedulesRouter from './routes/busSchedules'; 
+import authRouter from './routes/auth'; // Import auth router
+import homeRouter from './routes/home';
+import agentRouter from './routes/agent'; // Import agent router Import busAuth router
+import auth from './middleware/auth'; // Import auth middleware
 import mongoose from 'mongoose';
 import path from 'path';
 
@@ -21,16 +21,13 @@ import path from 'path';
 
     
 const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/suhani_bus';
-
-console.log(MONGO_URI);
-
+ 
 mongoose.connect(MONGO_URI)
   .then(() => console.log('Connected to MongoDB'))
   .catch((err) => console.error('MongoDB connection error:', err));
 
 const app = express();
-const PORT = process.env.PORT || 4000;
-
+ 
 
 app.use(cors());
 app.use(express.json());
@@ -63,8 +60,5 @@ app.get('/', (req, res) => {
   res.send('Suhani Bus Backend API is running!');
 });
 
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
 
-export default app;
+ export default app;

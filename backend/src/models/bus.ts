@@ -1,10 +1,10 @@
 // Enhanced schemas with all required fields
-import mongoose, { model, Schema } from 'mongoose';
+import mongoose, { Document, Schema } from 'mongoose';
 import { SeatLayout } from '../types';
 
 // Bus Schema
 export interface IBusDocument extends Document {
-  model: string;
+  busModel: string;
   registrationNumber: string;
   type: 'ac-sleeper' | 'non-ac-sleeper' | 'ac-seater' | 'non-ac-seater';
   seats: number;
@@ -18,7 +18,7 @@ export interface IBusDocument extends Document {
 }
 
 const BusSchema = new Schema<IBusDocument>({
-  model: { type: String, required: true },
+  busModel: { type: String, required: true },
   registrationNumber: { type: String, required: true, unique: true },
   type: { 
     type: String, 
@@ -50,7 +50,7 @@ const BusSchema = new Schema<IBusDocument>({
   updatedAt: { type: Date, default: Date.now },
 });
 
-export const BusModel = model<IBusDocument>('Bus', BusSchema);
+export const BusModel = mongoose.model<IBusDocument>('Bus', BusSchema);
 
 // Route Schema
 export interface IRouteDocument extends Document {
@@ -74,7 +74,7 @@ const RouteSchema = new Schema<IRouteDocument>({
   updatedAt: { type: Date, default: Date.now },
 });
 
-export const RouteModel = model<IRouteDocument>('Route', RouteSchema);
+export const RouteModel = mongoose.model<IRouteDocument>('Route', RouteSchema);
 
 // Bus Schedule Schema
 export interface IBusScheduleDocument extends Document {
@@ -121,4 +121,4 @@ const BusScheduleSchema = new Schema<IBusScheduleDocument>({
   updatedAt: { type: Date, default: Date.now },
 });
 
-export const BusScheduleModel = model<IBusScheduleDocument>('BusSchedule', BusScheduleSchema);
+export const BusScheduleModel = mongoose.model<IBusScheduleDocument>('BusSchedule', BusScheduleSchema);
