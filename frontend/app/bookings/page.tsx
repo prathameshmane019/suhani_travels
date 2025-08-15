@@ -40,7 +40,7 @@ interface ApiBooking {
     date: string;
     bus: {
       registrationNumber: string;
-      model: string;
+      busModel: string;
       type: string;
     };
     route: {
@@ -72,7 +72,7 @@ interface IBooking {
   };
   bus: {
     registrationNumber: string;
-    model: string;
+    busModel: string;
     type: string;
   };
   route: {
@@ -208,7 +208,7 @@ const BookingCard = ({
             <div>
               <h4 className="text-sm font-semibold text-gray-700 mb-1">Bus Details</h4>
               <p className="text-gray-900 font-medium">{booking.bus.registrationNumber}</p>
-              <p className="text-sm text-gray-600">{booking.bus.model}</p>
+              <p className="text-sm text-gray-600">{booking.bus.busModel}</p>
               <p className="text-xs text-blue-600 mt-1 capitalize">{booking.bus.type.replace('-', ' ')}</p>
             </div>
 

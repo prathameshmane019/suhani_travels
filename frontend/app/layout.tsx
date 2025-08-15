@@ -1,7 +1,11 @@
+ 
 import type { Metadata } from "next"; 
 import "./globals.css";
 import Navbar from "@/components/Navbar"; // Import the Navbar component
 import { AuthProvider } from "@/lib/AuthContext"; // Import AuthProvider
+import { Toaster } from 'sonner';
+
+ 
 
 // const geistSans = Geist({
 //   variable: "--font-geist-sans",
@@ -28,11 +32,14 @@ export default function RootLayout({
       <body
         
       >
+        <Toaster />
         <AuthProvider> {/* Wrap with AuthProvider */}
           <Navbar /> {/* Render the Navbar component */}
           <main  >{children}</main>
+
         </AuthProvider> {/* Close AuthProvider */}
       </body>
     </html>
   );
 }
+

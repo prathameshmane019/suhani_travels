@@ -6,9 +6,7 @@ export interface ITripDocument extends Document {
   route: Schema.Types.ObjectId;
   schedule: Schema.Types.ObjectId;
   price:number;
-  date: Date;
-  pickupPoints: string[];
-  dropPoints: string[];
+  date: Date; 
   availableSeats: number;
   bookedSeats: string[];
   createdAt: Date;
@@ -20,9 +18,7 @@ const tripSchema = new Schema<ITripDocument>({
   price:{type:Number ,min:0}, // Price per seat
   route: { type: Schema.Types.ObjectId, ref: "Route", required: true },
   schedule: { type: Schema.Types.ObjectId, ref: "BusSchedule", required: true },
-  date: { type: Date, required: true },
-  pickupPoints: { type: [String], default: [] },
-  dropPoints: { type: [String], default: [] },
+  date: { type: Date, required: true }, 
   availableSeats: { type: Number, required: true, min: 0 },
   bookedSeats: { type: [String], default: [] },
   createdAt: { type: Date, default: Date.now },

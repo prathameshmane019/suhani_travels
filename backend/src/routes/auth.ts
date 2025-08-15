@@ -73,9 +73,9 @@ router.post('/login', async (req, res) => {
 // Get current user details (protected route)
 router.get('/me', auth, async (req: any, res) => {
   try {
-    console.log(req.user);
+    console.log("User from middleware",req.user);
      const authUser = await AuthModel.findById(req.user.id)
-   
+   console.log("Auth user from db",authUser);
     let user;
     if (req.user.role === 'passenger') {
      user = await UserModel.findById(authUser?.userId);
@@ -83,8 +83,8 @@ router.get('/me', auth, async (req: any, res) => {
      return res.json({user}); 
     }
 
-     console.log(authUser);
-    res.json( {authUser});
+    //  console.log(authUser);
+    res.json({ user: authUser });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Server error' });

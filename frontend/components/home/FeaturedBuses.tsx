@@ -7,7 +7,7 @@ import { Star } from "lucide-react";
 
 interface BusCardProps {
   _id: string;
-  model: string;
+  busModel: string;
   type: string;
   amenities: string[];
   image?: string;
@@ -36,7 +36,7 @@ const FeaturedBuses: React.FC<FeaturedBusesProps> = ({ buses }) => {
           >
             <Card>
               <CardHeader>
-                <CardTitle className="text-lg">{bus.model} ({bus.type})</CardTitle>
+                <CardTitle className="text-lg">{bus.busModel} ({bus.type})</CardTitle>
                 <div className="flex items-center gap-1 text-yellow-500 text-sm">
                   <Star className="h-4 w-4 fill-yellow-500" />
                   <span>{bus.rating.toFixed(1)}</span>
@@ -46,7 +46,7 @@ const FeaturedBuses: React.FC<FeaturedBusesProps> = ({ buses }) => {
                 <div className="aspect-[16/9] relative rounded-lg overflow-hidden mb-4">
                   <Image
                     src={bus.image || "/images/bus-placeholder.png"} // Use a placeholder if no image
-                    alt={`${bus.model} bus`}
+                    alt={`${bus.busModel} bus`}
                     fill
                     className="object-cover"
                   />

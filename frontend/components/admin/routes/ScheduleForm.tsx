@@ -187,7 +187,7 @@ export function ScheduleForm({
                     <SelectContent>
                       {vehicles.map((bus) => (
                         <SelectItem key={bus.id} value={bus.id}>
-                          {bus.model} ({bus.registrationNumber})
+                          {bus.busModel} ({bus.registrationNumber})
                         </SelectItem>
                       ))}
                     </SelectContent>

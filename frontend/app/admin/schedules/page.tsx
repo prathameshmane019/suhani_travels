@@ -77,7 +77,7 @@ export default function SchedulesPage() {
       header: 'Bus',
       cell: ({ row }: { row: { original: BusSchedule } }) => {
         const bus = row.original.busId;
-        return typeof bus === 'object' && bus !== null ? bus.model || '-' : bus;
+        return typeof bus === 'object' && bus !== null ? bus.busModel || '-' : bus;
       },
     },
     {

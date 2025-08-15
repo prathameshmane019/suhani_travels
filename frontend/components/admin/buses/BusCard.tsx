@@ -27,7 +27,7 @@ export function BusCard({ bus, onEdit, onDelete }: BusCardProps) {
         {bus.image ? (
           <Image
             src={bus.image}
-            alt={bus.model}
+            alt={bus.busModel}
             width={100}
             height={100}
             className="object-cover w-full h-full"
@@ -40,7 +40,7 @@ export function BusCard({ bus, onEdit, onDelete }: BusCardProps) {
       </div>
       <CardHeader className="p-6">
           <div className="flex items-center justify-between mb-4">
-          <h3 className="text-lg font-semibold">{bus.model}</h3>
+          <h3 className="text-lg font-semibold">{bus.busModel}</h3>
           <Badge variant={statusColor}>{bus.status}</Badge>
         </div>
         <div className="space-y-3">

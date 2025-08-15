@@ -38,7 +38,7 @@ export function BusTable({ buses, onEdit, onDelete }: BusTableProps) {
           {buses.map((bus) => (
             <TableRow key={bus.id}>
               <TableCell className="font-medium">{bus.id}</TableCell>
-              <TableCell>{bus.model}</TableCell>
+              <TableCell>{bus.busModel}</TableCell>
               <TableCell>{bus.type}</TableCell>
               <TableCell>{bus.seats}</TableCell>
               <TableCell>-</TableCell>

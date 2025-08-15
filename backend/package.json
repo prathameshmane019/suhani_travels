@@ -6,7 +6,11 @@
     "dev": "ts-node src/index.ts",
     "build": "rimraf out && tsc",
     "start": "node out/index.js"
+  }, 
+  "engines": {
+    "node": "20.x"
   },
+
   "keywords": [],
   "author": "",
   "license": "ISC",

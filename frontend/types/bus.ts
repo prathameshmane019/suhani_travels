@@ -14,7 +14,7 @@ export interface BusFormData {
   seatLayout:SeatLayout;
   agentPassword:string;
   registrationNumber: string;
-  model: string;
+  busModel: string;
 }
 
 

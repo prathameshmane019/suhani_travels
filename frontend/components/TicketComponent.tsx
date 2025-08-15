@@ -32,7 +32,7 @@ interface IBooking {
   };
   bus: {
     registrationNumber: string;
-    model: string;
+    busModel: string;
     type: string; 
   };
   route: {
@@ -219,7 +219,7 @@ const TicketComponent = ({ booking }: { booking: IBooking }) => {
                 <Bus className="w-4 h-4 text-blue-600" />
                 <span className="text-sm font-medium text-gray-600">Bus Details</span>
               </div>
-              <p className="font-bold text-gray-900">{sampleBooking.bus.model}</p>
+              <p className="font-bold text-gray-900">{sampleBooking.bus.busModel}</p>
               <p className="text-sm text-gray-600">{sampleBooking.bus.registrationNumber}</p>
               <p className="text-xs text-blue-600 font-medium capitalize">{sampleBooking.bus?.type?.replace('-', ' ')}</p>
             </div>

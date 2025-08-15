@@ -8,7 +8,7 @@ export type DayOfWeek = 'monday' | 'tuesday' | 'wednesday' | 'thursday' | 'frida
 // Frontend interfaces for populated data
 export interface IPopulatedBus {
   _id: string;
-  model: string;
+  busModel: string;
   registrationNumber: string;
   type: BusType;
   seats: number;
@@ -66,7 +66,7 @@ export interface BusFormData {
   seatLayout?:SeatLayout;
   agentPassword:string;
   registrationNumber: string;
-  model: string;
+  busModel: string;
 }
 
 
@@ -112,7 +112,7 @@ interface Bus {
   id: string;
   name: string;
   registrationNumber: string;
-  model: string;
+  busModel: string;
   type: BusType;
   seats: number;
   amenities: string[];

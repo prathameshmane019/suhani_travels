@@ -32,7 +32,7 @@ export const BookingsTable = ({ bookings, onDelete }: BookingsTableProps) => {
             <tr key={booking._id} className="hover:bg-muted/50">
               <td className="px-6 py-4 text-sm text-foreground">{booking.bookingReference}</td>
               <td className="px-6 py-4 text-sm text-foreground">{booking.passengerDetails[0].name}</td>
-              <td className="px-6 py-4 text-sm text-foreground">{typeof booking.tripId === 'object' && typeof booking.tripId.bus === 'object' ? booking.tripId.bus.model : 'N/A'}</td>
+              <td className="px-6 py-4 text-sm text-foreground">{typeof booking.tripId === 'object' && typeof booking.tripId.bus === 'object' ? booking.tripId.bus.busModel : 'N/A'}</td>
               <td className="px-6 py-4 text-sm text-foreground">{new Date(booking.bookingDate).toLocaleDateString()}</td>
               <td className="px-6 py-4 text-sm font-medium text-foreground">₹{booking.totalPrice.toLocaleString()}</td>
               <td className="px-6 py-4">

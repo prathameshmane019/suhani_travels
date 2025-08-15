@@ -25,7 +25,7 @@ interface BusFormProps {
 }
 
 const defaultFormData: BusFormData = {
-  model: "", 
+  busModel: "", 
   registrationNumber: "",
   type: "ac-sleeper",
   seats: 40,
@@ -119,8 +119,8 @@ export function BusForm({ open, onClose, onSubmit, initialData, mode, existingIm
                         </Label>
                         <Input
                           id="model"
-                          value={formData.model}
-                          onChange={(e) => setFormData({ ...formData, model: e.target.value })}
+                          value={formData.busModel}
+                          onChange={(e) => setFormData({ ...formData, busModel: e.target.value })}
                           placeholder="e.g., Volvo 9400"
                           className="h-11"
                           required

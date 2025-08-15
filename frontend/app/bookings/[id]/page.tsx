@@ -22,7 +22,7 @@ interface ApiBooking {
     date: string;
     bus: {
       registrationNumber: string;
-      model: string;
+      busModel: string;
       type: string;
     };
     route: {
@@ -59,7 +59,7 @@ interface IBooking {
   };
   bus: {
     registrationNumber: string;
-    model: string;
+    busModel: string;
     type: string; 
   };
   route: {

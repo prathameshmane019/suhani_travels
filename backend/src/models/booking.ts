@@ -3,8 +3,8 @@ import { Document, Schema, model } from "mongoose";
 export interface IPassengerDetails {
   name: string;
   gender: 'male' | 'female' | 'other';
-  phone: string;
-  email?: string;
+  phone: string; 
+  age?:number
 }
 
 export interface IBookingDocument extends Document {
@@ -16,7 +16,7 @@ export interface IBookingDocument extends Document {
   bookingDate: Date;
   status: 'pending' | 'confirmed' | 'cancelled';
   paymentStatus?: 'pending' | 'completed' | 'failed' | 'refunded';
-  paymentMethod?: string;
+  paymentMethod?: 'cash' | 'online';
   transactionId?: string;
   notes?: string;
   boardingPoint: {  name: string; sequence: number; }; // New field
@@ -48,15 +48,11 @@ const passengerDetailsSchema = new Schema({
       message: 'Please provide a valid phone number'
     }
   },
-  email: { 
-    type: String, 
-    lowercase: true,
-    validate: {
-      validator: function(v: string) {
-        return !v || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
-      },
-      message: 'Please provide a valid email address'
-    }
+  age: {
+    type: Number,
+    min: [0, 'Age must be a positive number'],
+    required: false
+ 
   },
 }, { _id: false });
 
@@ -156,7 +152,7 @@ const bookingSchema = new Schema<IBookingDocument>({
 // Indexes for better query performance
 bookingSchema.index({ tripId: 1, status: 1 });
 bookingSchema.index({ userId: 1, createdAt: -1 });
-bookingSchema.index({ bookingDate: 1 });
+ 
 bookingSchema.index({ status: 1, createdAt: -1 });
 
 // Virtual for getting booking reference number

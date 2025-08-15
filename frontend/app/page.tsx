@@ -213,8 +213,6 @@ export default function HomePage() {
                 className="mt-8 grid grid-cols-2 sm:grid-cols-4 gap-4"
               >
                 <StatCard label="Passengers" value={passengersServed} icon={<Users className="h-5 w-5" />} />
-                <StatCard label="Cities" value={citiesCovered} icon={<MapPin className="h-5 w-5" />} />
-                <StatCard label="Buses" value={busesInFleet} icon={<Bus className="h-5 w-5" />} />
                 <StatCard label="Years" value={15} icon={<Star className="h-5 w-5" />} />
               </motion.div>
             </div>
@@ -239,8 +237,6 @@ export default function HomePage() {
                   />
                 </motion.div>
 
-                {/* floating mini cards */}
-
               </div>
             </div>
           </div>
@@ -255,8 +251,7 @@ export default function HomePage() {
                 className=" "
                 role="region"
                 aria-label="Search form"
-              >
-                {/* Your existing SearchForm component — crisp & functional */}
+              > 
                 <SearchForm />
               </motion.div>
             </div>

@@ -8,7 +8,7 @@ export const TripSummaryCard = ({ trip, from, to }: { trip: ITrip, from: string,
       <CardHeader>
         <CardTitle className="flex items-center">
           <BusIcon className="inline-block mr-3 h-7 w-7 text-primary" />
-          {trip.bus.model} - {trip.bus.registrationNumber}
+          {trip.bus.busModel} - {trip.bus.registrationNumber}
         </CardTitle>
       </CardHeader>
       <CardContent>

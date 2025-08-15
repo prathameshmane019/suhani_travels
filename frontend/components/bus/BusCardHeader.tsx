@@ -18,8 +18,8 @@ export const BusCardHeader = ({ trip }: { trip: ITrip }) => {
           <Badge variant="secondary">
             {trip.bus?.type?.replace('-', ' ').toUpperCase() || 'Standard'}
           </Badge>
-          {trip.bus?.model && (
-            <Badge variant="outline">{trip.bus.model}</Badge>
+          {trip.bus?.busModel && (
+            <Badge variant="outline">{trip.bus.busModel}</Badge>
           )}
         </div>
       </div>

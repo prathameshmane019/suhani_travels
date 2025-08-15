@@ -20,8 +20,9 @@ import path from 'path';
     dotenv.config(); // Load environment variables from .env file
 
     
-const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/suhani_bus';
+const MONGO_URI =  'mongodb://localhost:27017/suhani_bus';
  
+const PORT = process.env.PORT || 4000
 mongoose.connect(MONGO_URI)
   .then(() => console.log('Connected to MongoDB'))
   .catch((err) => console.error('MongoDB connection error:', err));
@@ -59,6 +60,10 @@ app.use('/api/trips', tripsRouter);
 app.get('/', (req, res) => {
   res.send('Suhani Bus Backend API is running!');
 });
-
+ 
+// Start the server
+app.listen(PORT, () => {
+  console.log(`Backend app listening at http://localhost:${PORT}`);
+});
 
  export default app;

@@ -75,6 +75,7 @@ const LoginPage = () => {
               <Input
                 id="identifier"
                 type="text"
+                className='mt-2'
                 value={identifier}
                 onChange={(e) => setIdentifier(e.target.value)}
                 required
@@ -85,6 +86,8 @@ const LoginPage = () => {
               <Input
                 id="password"
                 type="password"
+                className='mt-2'
+
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required

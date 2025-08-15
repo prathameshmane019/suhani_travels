@@ -23,8 +23,7 @@ const auth = async (req: AuthRequest, res: Response, next: NextFunction) => {
       return res.status(401).json({ message: 'Not authorized, token not found' });
     } 
     try {
-      const decoded: any = jwt.verify(token, JWT_SECRET);
-      console.log(decoded);
+      const decoded: any = jwt.verify(token, JWT_SECRET); 
       const authUser = await AuthModel.findById(decoded.id );
       if (!authUser) {
         return res.status(401).json({ message: 'Not authorized, user not found' });
