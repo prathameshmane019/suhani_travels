@@ -4,12 +4,13 @@ import { useAgentDashboard } from '@/lib/AgentDashboardContext';
 import { useRouter } from 'next/navigation';
 import TripList from '@/components/agent/TripList';
 import TripDetails from '@/components/agent/TripDetails';
+import { ITrip } from '@/types';
 
 const AgentTripsPage = () => {
   const { ongoingTrips, loadingTrips, selectedTrip, setSelectedTrip } = useAgentDashboard();
   const router = useRouter();
 
-  const handleTripSelect = (trip: any) => {
+  const handleTripSelect = (trip: ITrip) => {
     setSelectedTrip(trip);
     router.push(`/agent/${trip._id}`);
   };

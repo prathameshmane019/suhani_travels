@@ -1,20 +1,13 @@
 
 'use client';
+import { ITrip } from '@/types';
 import React from 'react';
-
-interface Trip {
-  _id: string;
-  bus: {
-    busModel: string;
-    registrationNumber: string;
-  };
-  date: string;
-}
+ 
 
 interface TripListProps {
-  trips: Trip[];
-  selectedTrip: Trip | null;
-  onTripSelect: (trip: Trip) => void;
+  trips: ITrip[];
+  selectedTrip: ITrip | null;
+  onTripSelect: (trip: ITrip) => void;
 }
 
 const TripList: React.FC<TripListProps> = ({ trips, selectedTrip, onTripSelect }) => {

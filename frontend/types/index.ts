@@ -43,18 +43,7 @@ export interface IPopulatedSchedule {
   updatedAt: Date;
 }
 
-// Main Trip interface for frontend
-export interface ITrip {
-  _id: string;
-  bus: IPopulatedBus;
-  route: IPopulatedRoute;
-  schedule: IPopulatedSchedule;
-  date: Date;
-  availableSeats: number;
-  bookedSeats: string[];
-  createdAt?: Date;
-  updatedAt?: Date;
-}
+export type { ITrip } from './trip';
 
 
 export interface BusFormData { 

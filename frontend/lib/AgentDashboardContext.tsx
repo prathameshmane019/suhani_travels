@@ -4,19 +4,7 @@
 import React, { createContext, useContext, useState, ReactNode, useEffect,useCallback } from 'react';
 import { useAuth } from './AuthContext';
 import { api } from './utils';
-import { IRoute } from '@/types/route';
-
-interface Trip {
-  _id: string;
-  date: string;
-  bus: {
-    busModel: string;
-    registrationNumber: string;
-  }; 
-  price: number; // Price per seat
-  route:string | IRoute
-  bookedSeats: string[];
-}
+import { ITrip } from '@/types';
 
 interface PassengerDetails {
   name: string;
@@ -43,7 +31,7 @@ interface Booking {
 }
 
 interface AgentDashboardContextType {
-  ongoingTrips: Trip[];
+  ongoingTrips: ITrip[];
   loadingTrips: boolean;
   error: string | null;
   tripBookings: Booking[];
@@ -51,20 +39,20 @@ interface AgentDashboardContextType {
   fetchTripBookings: (tripId: string) => Promise<void>;
   refreshTrips: () => void;
   refreshBookings: (tripId: string) => void;
-  selectedTrip: Trip | null;
-  setSelectedTrip: (trip: Trip | null) => void;
+  selectedTrip: ITrip | null;
+  setSelectedTrip: (trip: ITrip | null) => void;
 }
 
 const AgentDashboardContext = createContext<AgentDashboardContextType | undefined>(undefined);
 
 export const AgentDashboardProvider = ({ children }: { children: ReactNode }) => {
   const { user, token } = useAuth();
-  const [ongoingTrips, setOngoingTrips] = useState<Trip[]>([]);
+  const [ongoingTrips, setOngoingTrips] = useState<ITrip[]>([]);
   const [loadingTrips, setLoadingTrips] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [tripBookings, setTripBookings] = useState<Booking[]>([]);
   const [loadingBookings, setLoadingBookings] = useState(false);
-  const [selectedTrip, setSelectedTrip] = useState<Trip | null>(null);
+  const [selectedTrip, setSelectedTrip] = useState<ITrip | null>(null);
 
   const fetchOngoingTrips = useCallback(async () => {
     setLoadingTrips(true);

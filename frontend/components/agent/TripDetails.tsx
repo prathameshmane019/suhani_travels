@@ -1,23 +1,16 @@
 
 'use client';
 import React from 'react';
-
-interface Trip {
-  _id: string;
-  bus: {
-    busModel: string;
-    registrationNumber: string;
-  };
-  date: string;
-  pickupPoints: string[];
-  dropPoints: string[];
-}
+import { ITrip } from '@/types';
 
 interface TripDetailsProps {
-  trip: Trip | null;
+  trip: ITrip | null;
 }
 
 const TripDetails: React.FC<TripDetailsProps> = ({ trip }) => {
+  const pickupPoints = trip?.route.stops.slice(0, Math.ceil(trip.route.stops.length / 2)).map(stop => stop.name).join(', ');
+  const dropPoints = trip?.route.stops.slice(Math.ceil(trip.route.stops.length / 2)).map(stop => stop.name).join(', ');
+
   return (
     <div className="lg:col-span-2 bg-white shadow-md rounded-lg p-6">
       {trip ? (
@@ -26,8 +19,8 @@ const TripDetails: React.FC<TripDetailsProps> = ({ trip }) => {
             <h3 className="font-bold text-lg mb-2">Selected Trip Details:</h3>
             <p className="text-base">Bus: {trip.bus.busModel} ({trip.bus.registrationNumber})</p>
             <p className="text-base">Date: {new Date(trip.date).toLocaleDateString()}</p>
-            <p className="text-base">Pickup Points: {trip.pickupPoints.join(', ')}</p>
-            <p className="text-base">Drop Points: {trip.dropPoints.join(', ')}</p>
+            <p className="text-base">Pickup Points: {pickupPoints}</p>
+            <p className="text-base">Drop Points: {dropPoints}</p>
           </div>
           <p className="text-gray-600">View passenger details and manage bookings on the Passenger Details page.</p>
         </>
