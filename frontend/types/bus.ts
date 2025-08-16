@@ -5,7 +5,6 @@ export type BusStatus = 'active' | 'inactive' | 'maintenance';
 export type DayOfWeek = 'monday' | 'tuesday' | 'wednesday' | 'thursday' | 'friday' | 'saturday' | 'sunday';
 
 export interface BusFormData {
-  name: string;
   type: BusType;
   seats: number;
   amenities: string[];

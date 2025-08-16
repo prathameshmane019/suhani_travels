@@ -1,7 +1,7 @@
 import express from 'express';
 import { BusModel, IBusWithImageUrls } from '../models/bus';
 import { AuthModel } from '../models/auth';
-import upload from '../middleware/multer';
+import { upload, handleMulterError } from '../middleware/multer';
 import { SeatLayout } from '../types';
 import { 
   uploadToCloudinary, 
@@ -9,7 +9,6 @@ import {
   BUS_IMAGE_TRANSFORMATIONS,
   generateTransformationUrl
 } from '../utils/cloudinary';
-import { handleMulterError } from '../utils/multer';
 
 const router = express.Router();
 

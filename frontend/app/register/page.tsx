@@ -14,7 +14,6 @@ import Image from 'next/image';
 const RegisterPage = () => {
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
-  const [email, setEmail] = useState('');
   const [gender, setGender] = useState('');
   const [age, setAge] = useState('');
   const [password, setPassword] = useState('');
@@ -25,7 +24,7 @@ const RegisterPage = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      const res = await api.post('/auth/register', { name, phone, email, password, age, gender });
+      const res = await api.post('/auth/register', { name, phone, password, age, gender });
       toast.success(res.data.message);
       router.push('/login');
     } catch (err) {
@@ -37,7 +36,7 @@ const RegisterPage = () => {
   };
 
   return (
-    <div className="h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
       <div className="h-full">
         <div className="grid lg:grid-cols-2 h-full">
           {/* Illustration Section - Hidden on mobile */}
@@ -58,8 +57,8 @@ const RegisterPage = () => {
           </div>
 
           {/* Form Section */}
-          <div className="flex items-center justify-center  xl:w-[50vw] h-screen  ">
-            <div className="w-full max-w-md lg:max-w-[50vw] xl:max-w-[50vw]  h-screen bg-white rounded-2xl shadow-xl p-6 lg:p-8 my-auto">
+          <div className="flex items-center justify-center  xl:w-[50vw]  ">
+            <div className="w-full max-w-md lg:max-w-[50vw] xl:max-w-[50vw]   bg-white rounded-2xl shadow-xl p-6 lg:p-8">
               {/* Header */}
               <div className="text-center  my-12">
                 <div className="w-14 h-14 bg-indigo-100 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -72,7 +71,7 @@ const RegisterPage = () => {
               <form onSubmit={handleSubmit} className="space-y-3">
                 {/* Name and Email Row */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="space-y-2">
+                  <div className="space-y-2 md:col-span-2">
                     <Label htmlFor="name" className="text-sm font-medium text-gray-700 flex items-center gap-2">
                       <User className="w-4 h-4" />
                       Full Name
@@ -87,21 +86,7 @@ const RegisterPage = () => {
                       required
                     />
                   </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="email" className="text-sm font-medium text-gray-700 flex items-center gap-2">
-                      <Mail className="w-4 h-4" />
-                      Email
-                    </Label>
-                    <Input
-                      id="email"
-                      type="email"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      placeholder="Enter your email"
-                      className="h-11 border-gray-300 focus:border-indigo-500 focus:ring-indigo-500"
-                      required
-                    />
-                  </div>
+                  
                 </div>
 
                 {/* Phone and Age Row */}
@@ -168,10 +153,10 @@ const RegisterPage = () => {
                       type="password"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
-                      placeholder="Password (6+ chars)"
+                      placeholder="Password (4+ chars)"
                       className="h-11 border-gray-300 focus:border-indigo-500 focus:ring-indigo-500"
                       required
-                      minLength={6}
+                      minLength={4}
                     />
                   </div>
                 </div>

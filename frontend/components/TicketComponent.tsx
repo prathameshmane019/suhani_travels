@@ -116,9 +116,9 @@ const TicketComponent = ({ booking }: { booking: IBooking }) => {
   const sampleBooking = booking
 
   return ( 
-      <div className="mt-15 bg-white rounded-xl  w-full  overflow-auto">
+      <div className="mt-15 mx-auto bg-white rounded-xl  w-full  overflow-auto">
         {/* Single Header with Download */}
-        <div className="flex justify-between items-center p-4 border-b border-gray-200">
+        <div className="flex justify-between items-center p-4 mx-10 border-b border-gray-200">
           <h2 className="text-lg font-bold text-gray-900">Bus Ticket</h2>
           <div className="flex items-center gap-2">
             <button

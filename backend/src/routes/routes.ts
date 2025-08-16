@@ -19,7 +19,10 @@ router.get('/:id', async (req, res) => {
 // Create a new route (fixed entity: name + ordered stops, including start and end)
 router.post('/', async (req, res) => {
   const { name, stops, basePrice, distance } = req.body;
-  if (!name || !Array.isArray(stops) || stops.length < 2 || basePrice === undefined || distance === undefined) {
+
+  console.log(req.body);
+
+  if (!name || !Array.isArray(stops) || stops.length < 2 || distance === undefined) {
     return res.status(400).json({ error: 'Route requires name, at least two stops (start and end), basePrice, and distance.' });
   }
   const normalizedStops = stops.map((s: any, index: number) => ({ name: s.name, sequence: s.sequence ?? index + 1 }));

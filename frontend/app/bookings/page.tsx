@@ -478,12 +478,12 @@ const BookingsPage = () => {
   const filteredBookings = filterBookings(bookings);
   
   return ( 
-    <div className="min-h-screen dotted-background">
+    <div className="min-h-[90vh] mt-12 dotted-background ">
       <div className="bg-white shadow-sm border-b border-gray-100">
         <div className="container mx-auto px-4 py-6">
           <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900 mb-2">My Bookings</h1>
+              <h1 className="text-3xl font-bold text-gray-900 ">My Bookings</h1>
               <p className="text-gray-600">Manage and track all your bus reservations</p>
             </div>
           </div>
@@ -491,8 +491,7 @@ const BookingsPage = () => {
       </div>
 
       <div className="container mx-auto px-4 py-8">
-
-
+ 
         {/* Filters */}
         {bookings.length > 0 && (
           <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-8">

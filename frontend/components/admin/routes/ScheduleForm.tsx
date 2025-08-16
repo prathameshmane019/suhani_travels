@@ -186,7 +186,7 @@ export function ScheduleForm({
                     </SelectTrigger>
                     <SelectContent>
                       {vehicles.map((bus) => (
-                        <SelectItem key={bus.id} value={bus.id}>
+                        <SelectItem key={bus._id} value={bus._id}>
                           {bus.busModel} ({bus.registrationNumber})
                         </SelectItem>
                       ))}

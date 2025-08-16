@@ -26,8 +26,7 @@ if (!MONGO_URI) {
   console.error('MongoDB URI is not defined. Please set MONGO_URI in your environment variables.');
   process.exit(1);
 }
-
-console.log(MONGO_URI);
+ 
 
 const PORT = process.env.PORT || 4000
 mongoose.connect(MONGO_URI)

@@ -31,12 +31,7 @@ const BusesPage = () => {
     useEffect(() => {
         api.get('/buses')
             .then(res => {
-                // Map _id to id for frontend consistency
-                const mappedBuses = res.data.map((bus: Bus & { _id: string }) => ({
-                    ...bus,
-                    id: bus._id,
-                }));
-                setBuses(mappedBuses);
+                setBuses(res.data);
             })
             .catch(() => toast.error('Failed to fetch buses'));
     }, []);
@@ -68,7 +63,7 @@ const BusesPage = () => {
             console.log(form);
             // If editing, update; else, create
             if (formMode === 'edit' && selectedBus) {
-                await api.put(`/buses/${selectedBus.id}`, form, { headers: { 'Content-Type': 'multipart/form-data' } });
+                await api.put(`/buses/${selectedBus._id}`, form, { headers: { 'Content-Type': 'multipart/form-data' } });
                 toast.success('Bus updated');
             } else {
                 await api.post('/buses', form, { headers: { 'Content-Type': 'multipart/form-data' } });
@@ -84,10 +79,10 @@ const BusesPage = () => {
         }
     };
 
-    const handleDeleteBus = async (id: string) => {
+    const handleDeleteBus = async (_id: string) => {
         try {
-            await api.delete(`/buses/${id}`);
-            setBuses(buses => buses.filter(b => b.id !== id));
+            await api.delete(`/buses/${_id}`);
+            setBuses(buses => buses.filter(b => b._id !== _id));
             toast.success('Bus deleted');
         } catch (error) {
             toast.error('Failed to delete bus');
@@ -162,7 +157,7 @@ const BusesPage = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {filteredBuses.map((bus) => (
                         <BusCard
-                            key={bus.id}
+                            key={bus._id}
                             bus={bus}
                             onEdit={handleEdit}
                             onDelete={handleDeleteBus}
@@ -191,6 +186,7 @@ const BusesPage = () => {
                     status: selectedBus.status,
                     seatLayout: selectedBus.seatLayout,
                   image: null,
+                    agentPassword: '',
                 } : undefined}
                 mode={formMode}
               existingImageUrl={selectedBus?.image}

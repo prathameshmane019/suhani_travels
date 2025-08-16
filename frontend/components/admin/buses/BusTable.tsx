@@ -28,20 +28,18 @@ export function BusTable({ buses, onEdit, onDelete }: BusTableProps) {
             <TableHead>Bus ID</TableHead>
             <TableHead>Model</TableHead>
             <TableHead>Type</TableHead>
-            <TableHead>Total Seats</TableHead>
-            <TableHead>Price</TableHead>
+            <TableHead>Total Seats</TableHead> 
             <TableHead>Status</TableHead>
             <TableHead className="text-right">Actions</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {buses.map((bus) => (
-            <TableRow key={bus.id}>
-              <TableCell className="font-medium">{bus.id}</TableCell>
+                        <TableRow key={bus._id}>
+              <TableCell className="font-medium">{bus._id}</TableCell>
               <TableCell>{bus.busModel}</TableCell>
               <TableCell>{bus.type}</TableCell>
-              <TableCell>{bus.seats}</TableCell>
-              <TableCell>-</TableCell>
+              <TableCell>{bus.seats}</TableCell> 
               <TableCell>
                 <Badge
                   variant={
@@ -68,7 +66,7 @@ export function BusTable({ buses, onEdit, onDelete }: BusTableProps) {
                     variant="ghost"
                     size="icon"
                     className="text-destructive hover:text-destructive"
-                    onClick={() => onDelete(bus.id)}
+                    onClick={() => onDelete(bus._id)}
                   >
                     <Trash2 className="w-4 h-4" />
                   </Button>

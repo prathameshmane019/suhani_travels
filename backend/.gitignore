@@ -15,8 +15,7 @@ package-lock.json
 
 # testing
 /coverage
-
-/out 
+ 
 
 # production
 /build

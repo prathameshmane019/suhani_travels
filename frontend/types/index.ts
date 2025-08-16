@@ -16,6 +16,7 @@ export interface IPopulatedBus {
   image?: string;
   seatLayout: SeatLayout;
   status: BusStatus;
+  agent?: any;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -90,7 +91,7 @@ export interface BusFilters {
 }
 
 export interface Route {
-  id: string;
+  _id: string;
   name: string;
   stops: { id?: string; name: string; sequence: number }[]; 
   distance: number;
@@ -98,7 +99,7 @@ export interface Route {
   updatedAt: Date;
 }
 interface Bus {
-  id: string;
+  _id: string;
   registrationNumber: string;
   busModel: string;
   type: BusType;
@@ -107,6 +108,7 @@ interface Bus {
   image?: string;
   status: BusStatus;
   seatLayout?:SeatLayout
+  agent?: any;
   createdAt: Date;
   updatedAt: Date;
 }

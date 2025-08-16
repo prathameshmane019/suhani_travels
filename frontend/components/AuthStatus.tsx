@@ -20,7 +20,8 @@ export const AuthStatus = () => {
   if (loading) {
     return <div className="text-sm text-muted-foreground">Loading user...</div>;
   }
-
+  
+  console.log("User :",user);
   if (user && user.role == 'passenger') {
     return (
       <div className="flex items-center  gap-2">
@@ -34,7 +35,7 @@ export const AuthStatus = () => {
         >
           My Bookings
         </Button>
-        <span className="text-sm font-medium">Welcome, {user.name}</span>
+        <span className="text-sm  hidden sm:flex font-medium">Welcome, {user.name}</span>
         <Button variant="ghost" size="sm" onClick={handleLogout}>Logout</Button>
       </div>
     );
@@ -84,7 +85,7 @@ export const AuthStatus = () => {
         < HomeIcon />
       </Link>
       <Button
-        onClick={() => router.push('/trip')}
+        onClick={() => router.push('/bookings')}
         className=""
         size={'sm'}
       >

@@ -74,7 +74,7 @@ export function BusCard({ bus, onEdit, onDelete }: BusCardProps) {
           <Button
             variant="destructive"
             className="flex-1"
-              onClick={() => onDelete(bus.id)}
+              onClick={() => onDelete(bus._id)}
           >
             <Trash2 className="w-4 h-4 mr-2" />
             Remove

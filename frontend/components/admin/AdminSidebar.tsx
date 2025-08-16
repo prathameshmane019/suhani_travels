@@ -1,6 +1,6 @@
 'use client';
 import { useState } from 'react';
-import { Menu, Users, Navigation, Route, Bus, BookOpen, BarChart3, RotateCcw, HeadphonesIcon, LogOut, X } from 'lucide-react';
+import { Menu, Users, Navigation, Route, Bus, BookOpen, BarChart3, RotateCcw, HeadphonesIcon, LogOut, X, Megaphone } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
@@ -14,6 +14,7 @@ const menuItems = [
     { icon: RotateCcw, label: 'Refunds', href: '/admin/refunds' },
     { icon: HeadphonesIcon, label: 'Support', href: '/admin/support' },
     { icon: Users, label: 'Customers', href: '/admin/users' },
+    { icon: Megaphone, label: 'Banner', href: '/admin/banners' },
 ];
 
 const Sidebar = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) => {

@@ -79,6 +79,7 @@ router.get('/me', auth, async (req: any, res) => {
     let user;
     if (req.user.role === 'passenger') {
      user = await UserModel.findById(authUser?.userId);
+     user = {...user?.toObject(), role: 'passenger'}; 
      console.log(user);
      return res.json({user}); 
     }

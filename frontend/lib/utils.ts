@@ -15,7 +15,7 @@ export function formatPrice(price: number) {
 }
 
 export const api = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api',
+  baseURL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api',
   // Do not force JSON headers; allow multipart for uploads
 });
 

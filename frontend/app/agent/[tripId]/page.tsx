@@ -1,5 +1,4 @@
-'use client';
-
+'use client'; 
 import React, { useState, useMemo, useEffect } from 'react';
 import { useAgentDashboard } from '@/lib/AgentDashboardContext';
 import { api } from '@/lib/utils';
@@ -14,12 +13,7 @@ import SortOptions from '@/components/agent/SortOptions';
 import Link from 'next/link';
 import { AxiosError } from 'axios';
 
-interface PassengerDetails {
-  name: string;
-  gender: 'male' | 'female' | 'other';
-  phone: string;
-  email?: string;
-}
+ 
 
  
 
