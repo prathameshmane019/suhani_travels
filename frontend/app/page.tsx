@@ -1,21 +1,17 @@
-"use client";
-
+"use client"; 
 import React, { ReactNode, useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   ArrowRight,
-  ArrowUp,
-  Bus, 
-  MapPin,
+  ArrowUp, 
   Phone,
   Star, 
   Users,
   CreditCard,
   ShieldCheck,
-} from "lucide-react";
-
+} from "lucide-react"; 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -27,8 +23,7 @@ import {
 import SearchForm from "@/components/SearchForm";
 import { toast } from "sonner"; 
 import BusShowcase from "@/components/home/ImageGallery";
-
- 
+import BannerModal from "@/components/BannerModal";
 
 type RouteCard = {
   id: string;
@@ -127,10 +122,8 @@ export default function HomePage() {
   const testimonialTimerRef = useRef<number | null>(null);
 
   // statistics (animated)
-  const passengersServed = useAnimatedNumber(128_450);
-  const citiesCovered = useAnimatedNumber(142);
-  const busesInFleet = useAnimatedNumber(348);
-
+  const passengersServed = useAnimatedNumber(8450); 
+  
   useEffect(() => {
     testimonialTimerRef.current = window.setInterval(() => {
       setTestimonialIndex((i) => (i + 1) % testimonials.length);
@@ -150,6 +143,8 @@ export default function HomePage() {
 
   return (
     <main className="min-h-screen bg-background text-foreground antialiased">
+      <BannerModal />
+
       {/* ---------- HERO (large gradient + search) ---------- */}
       <section
         aria-label="Hero"
@@ -213,7 +208,7 @@ export default function HomePage() {
                 className="mt-8 grid grid-cols-2 sm:grid-cols-4 gap-4"
               >
                 <StatCard label="Passengers" value={passengersServed} icon={<Users className="h-5 w-5" />} />
-                <StatCard label="Years" value={15} icon={<Star className="h-5 w-5" />} />
+                <StatCard label="Years" value={8} icon={<Star className="h-5 w-5" />} />
               </motion.div>
             </div>
 
@@ -478,30 +473,23 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ------------------ APP DOWNLOAD CTA (gradient) ------------------ */}
+      {/* ------------------ BOOK A SEAT CTA (gradient) ------------------ */}
       <section className="mt-12">
         <div className="max-w-7xl mx-auto px-6 md:px-8">
           <div className="rounded-3xl bg-gradient-to-r from-primary to-accent p-10 text-white shadow-2xl border border-white/10">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
               <div>
-                <h3 className="text-3xl font-bold">Book on the go — download the app</h3>
+                <h3 className="text-3xl font-bold">Ready to Travel? Book Your Seat Now!</h3>
                 <p className="mt-3 text-lg">
-                  Use our mobile app for faster bookings, deals, and live tracking. Available on Android and iOS.
+                  Find the best bus routes, check seat availability, and book your tickets in just a few clicks. Your next journey is just a search away.
                 </p>
 
-                <div className="mt-6 flex flex-wrap gap-4">
-                  <a href="#" aria-label="Download on Google Play">
-                    <Image src="/images/mobile.png" alt="Google Play" width={160} height={48} />
-                  </a>
-                  <a href="#" aria-label="Download on the App Store">
-                    <Image src="/app-store.png" alt="App Store" width={160} height={48} />
-                  </a>
-                </div>
-
                 <div className="mt-6 flex gap-4">
-                  <Button className="bg-white text-primary rounded-full px-6">Open App</Button>
+                  <Button className="bg-white text-primary rounded-full px-6">
+                    Book a Seat
+                  </Button>
                   <Button variant="ghost" className="text-white border-white/30 rounded-full px-6">
-                    Learn more
+                    Explore Routes
                   </Button>
                 </div>
               </div>
@@ -510,7 +498,7 @@ export default function HomePage() {
                 <div className=" ">
                   <Image
                     src="/images/bus-stop.png"
-                    alt="App preview"
+                    alt="Bus at a bus stop"
                     width={700}
                     height={720}
                     className="object-cover"
@@ -522,24 +510,30 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ------------------ FINAL CTA and FOOTER ------------------ */}
+      {/* ------------------ CONTACT CTA ------------------ */}
       <section className="mt-16">
         <div className="max-w-7xl mx-auto px-6 md:px-8 py-12 rounded-2xl bg-card border border-border shadow-sm">
           <div className="flex flex-col md:flex-row items-center justify-between gap-6">
             <div>
-              <h3 className="text-2xl font-bold">Ready for your next journey?</h3>
-              <p className="text-muted-foreground mt-2">Secure your seat on our premium buses — comfortable, safe, and reliable.</p>
+              <h3 className="text-2xl font-bold">Have Questions? Contact Us!</h3>
+              <p className="text-muted-foreground mt-2">Our team is ready to help you with your booking or any other queries.</p>
             </div>
             <div className="flex gap-3">
-              <Button onClick={() => document.getElementById("how-it-works")?.scrollIntoView({ behavior: "smooth" })} size="lg" className="rounded-full bg-primary">
-                Get Started
+              <Button asChild size="lg" className="rounded-full bg-primary">
+                <a href="tel:+918788761515">
+                  <Phone className="mr-2 h-5 w-5" />
+                  Call Us
+                </a>
               </Button>
-              <Button variant="outline" className="rounded-full">Contact Sales</Button>
+              <Button asChild variant="outline" className="rounded-full">
+                <a href="https://wa.me/918788761515" target="_blank" rel="noopener noreferrer">
+                  Message on WhatsApp
+                </a>
+              </Button>
             </div>
           </div>
         </div>
-      </section>
-
+      </section> 
       <footer className="mt-10">
         <div className="max-w-7xl mx-auto px-6 md:px-8 py-10">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">

@@ -4,12 +4,28 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'; 
+import { ITrip as Trip} from '@/types'; // Added Trip import
+
+interface NewBookingData {
+  seatNumbers: string;
+  passengerName: string;
+  passengerGender: 'male' | 'female' | 'other';
+  passengerPhone: string;
+  passengerEmail: string;
+  totalPrice: string; 
+  paymentMethod: string;
+  boardingPointName: string;
+  boardingPointSequence: string;
+  dropoffPointName: string;
+  dropoffPointSequence: string;
+}
+
 interface NewBookingFormProps {
-  newBookingData: any;
-  handleNewBookingChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement> | { target: { name: string; value: any; } }) => void;
+  newBookingData: NewBookingData;
+  handleNewBookingChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement> | { target: { name: string; value: string | number | boolean; } }) => void;
   handleNewBookingSubmit: (e: React.FormEvent) => void;
   setShowNewBookingForm: (show: boolean) => void;
-  selectedTrip: any;
+  selectedTrip: Trip;
   isAgent: boolean;
 }
 
@@ -98,7 +114,7 @@ const NewBookingForm: React.FC<NewBookingFormProps> = ({ newBookingData, handleN
               <SelectValue placeholder="Select Boarding Point" />
             </SelectTrigger>
             <SelectContent>
-              {selectedTrip?.route.stops.map((point: any) => (
+              {selectedTrip?.route.stops.map((point: { name: string; sequence: number }) => (
                 <SelectItem key={point.name} value={point.name}>{point.name}</SelectItem>
               ))}
             </SelectContent>
@@ -111,7 +127,7 @@ const NewBookingForm: React.FC<NewBookingFormProps> = ({ newBookingData, handleN
               <SelectValue placeholder="Select Drop-off Point" />
             </SelectTrigger>
             <SelectContent>
-              {selectedTrip?.route.stops.map((point: any) => (
+              {selectedTrip?.route.stops.map((point: { name: string; sequence: number }) => (
                 <SelectItem key={point.name} value={point.name}>{point.name}</SelectItem>
               ))}
             </SelectContent>

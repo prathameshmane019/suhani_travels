@@ -29,14 +29,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        
-      >
-        <Toaster />
+      <body>
+        <Toaster /> 
         <AuthProvider> {/* Wrap with AuthProvider */}
-          <Navbar /> {/* Render the Navbar component */}
-          <main  >{children}</main>
-
+          <Navbar />
+          <main>{children}</main>
         </AuthProvider> {/* Close AuthProvider */}
       </body>
     </html>

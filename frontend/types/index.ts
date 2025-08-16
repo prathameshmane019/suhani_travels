@@ -99,7 +99,6 @@ export interface Route {
 }
 interface Bus {
   id: string;
-  name: string;
   registrationNumber: string;
   busModel: string;
   type: BusType;

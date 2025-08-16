@@ -1,143 +1,317 @@
 import express from 'express';
-import { BusModel } from '../models/bus';
+import { BusModel, IBusWithImageUrls } from '../models/bus';
 import { AuthModel } from '../models/auth';
-import multer from 'multer';
-import path from 'path';
-import fs from 'fs';
+import upload from '../middleware/multer';
 import { SeatLayout } from '../types';
+import { 
+  uploadToCloudinary, 
+  deleteFromCloudinary, 
+  BUS_IMAGE_TRANSFORMATIONS,
+  generateTransformationUrl
+} from '../utils/cloudinary';
+import { handleMulterError } from '../utils/multer';
 
 const router = express.Router();
 
-// Ensure uploads directory exists
-const uploadsDir = path.join(__dirname, '..', '..', 'uploads');
-if (!fs.existsSync(uploadsDir)) {
-  fs.mkdirSync(uploadsDir, { recursive: true });
-}
-
-// Multer storage for image uploads
-const storage = multer.diskStorage({
-  destination: (_req: express.Request, _file: any, cb: (error: any, destination: string) => void) => cb(null, uploadsDir),
-  filename: (_req: express.Request, file: any, cb: (error: any, filename: string) => void) => {
-    const unique = `${Date.now()}-${Math.round(Math.random() * 1e9)}`;
-    const ext = path.extname(file.originalname) || '.jpg';
-    cb(null, `bus-${unique}${ext}`);
-  },
-});
-const upload = multer({ storage });
 
 // Get all buses
-router.get('/', async (req, res) => {
-  const buses = await BusModel.find();
-  res.json(buses);
+router.get('/', async (req: express.Request, res: express.Response) => {
+  try {
+    const buses = await BusModel.find();
+     
+    const busesWithThumbnails = buses.map(bus => ({
+      ...bus.toObject(),
+      ...(bus.imagePublicId ? {
+        thumbnailUrl: generateTransformationUrl(bus.imagePublicId, BUS_IMAGE_TRANSFORMATIONS.thumbnail)
+      } : {})
+    }));
+    console.log(busesWithThumbnails);
+    res.json(busesWithThumbnails);
+  } catch (error) {
+    console.error('Error fetching buses:', error);
+    res.status(500).json({ error: 'Failed to fetch buses' });
+  }
 });
 
 // Get a single bus by ID
-router.get('/:id', async (req, res) => {
-  const bus = await BusModel.findById(req.params.id);
-  if (!bus) return res.status(404).json({ error: 'Bus not found' });
-  res.json(bus);
+router.get('/:id', async (req: express.Request, res: express.Response) => {
+  try {
+    const bus = await BusModel.findById(req.params.id);
+    if (!bus) return res.status(404).json({ error: 'Bus not found' });
+  
+    res.json(bus);
+  } catch (error) {
+    console.error('Error fetching bus:', error);
+    res.status(500).json({ error: 'Failed to fetch bus' });
+  }
 });
 
 // Create a new bus and a corresponding agent user
-router.post('/', upload.single('image'), async (req, res) => {
-  const { model, registrationNumber, type, seats, amenities, status, seatLayout, agentPassword } = req.body as any;
+router.post('/', upload.single('image'), handleMulterError, async (req: express.Request, res: express.Response) => {
+  try {
+    const { 
+      busModel, 
+      registrationNumber, 
+      type, 
+      seats, 
+      amenities, 
+      status, 
+      seatLayout, 
+      agentPassword 
+    } = req.body as any;
 
-  if (!model || !registrationNumber || !type || !agentPassword) {
-    return res.status(400).json({ error: 'model, registrationNumber, type, and agentPassword are required' });
-  }
+    console.log(req.body);
 
-  let finalSeats = seats ? Number(seats) : 0;
-  let finalSeatLayout: SeatLayout | undefined = undefined;
-
-  if (seatLayout) {
-    try {
-      finalSeatLayout = JSON.parse(seatLayout);
-      if (finalSeatLayout && finalSeatLayout.totalSeats) {
-        finalSeats = finalSeatLayout.totalSeats;
-      }
-    } catch (e) {
-      console.error("Failed to parse seatLayout JSON:", e);
-      return res.status(400).json({ error: 'Invalid seatLayout format' });
+    if (!busModel || !agentPassword) {
+      return res.status(400).json({ 
+        error: 'busModel, registrationNumber, type, and agentPassword are required' 
+      });
     }
-  }
 
-  const baseUrl = `${req.protocol}://${req.get('host')}`;
-  const file = (req as any).file as { filename: string } | undefined;
-  const image = file ? `${baseUrl}/uploads/${file.filename}` : undefined;
-  const amenitiesArray = Array.isArray(amenities)
-    ? amenities
-    : typeof amenities === 'string' && amenities.length
-      ? amenities.split(',').map((a: string) => a.trim())
-      : [];
+    let finalSeats = seats ? Number(seats) : 0;
+    let finalSeatLayout: SeatLayout | undefined = undefined;
 
-  const bus = new BusModel({
-    model,
-    registrationNumber,
-    type,
-    seats: finalSeats,
-    amenities: amenitiesArray,
-    status,
-    ...(image ? { image } : {}),
-    ...(finalSeatLayout ? { seatLayout: finalSeatLayout } : {}),
-  });
-
-  await bus.save();
-
-  const auth = new AuthModel({
-    name: `Agent for ${registrationNumber}`,
-    registrationNumber,
-    password: agentPassword,
-    role: 'agent',
-    busId: bus._id,
-  });
-
-  await auth.save();
-
-  res.status(201).json({ bus, auth });
-});
-
-// Update a bus
-router.put('/:id', upload.single('image'), async (req, res) => {
-  const { model, registrationNumber, type, seats, amenities, status, seatLayout } = req.body as any;
-  const update: any = { model, registrationNumber, type, status, updatedAt: new Date() };
-
-  if (typeof seats !== 'undefined') update.seats = Number(seats);
-
-  if (seatLayout) {
-    try {
-      const parsedSeatLayout: SeatLayout = JSON.parse(seatLayout);
-      update.seatLayout = parsedSeatLayout;
-      if (parsedSeatLayout && parsedSeatLayout.totalSeats) {
-        update.seats = parsedSeatLayout.totalSeats;
+    if (seatLayout) {
+      try {
+        finalSeatLayout = JSON.parse(seatLayout);
+        if (finalSeatLayout && finalSeatLayout.totalSeats) {
+          finalSeats = finalSeatLayout.totalSeats;
+        }
+      } catch (e) {
+        console.error("Failed to parse seatLayout JSON:", e);
+        return res.status(400).json({ error: 'Invalid seatLayout format' });
       }
-    } catch (e) {
-      console.error("Failed to parse seatLayout JSON:", e);
-      return res.status(400).json({ error: 'Invalid seatLayout format' });
     }
-  }
 
-  if (typeof amenities !== 'undefined') {
-    update.amenities = Array.isArray(amenities)
+    const amenitiesArray = Array.isArray(amenities)
       ? amenities
       : typeof amenities === 'string' && amenities.length
         ? amenities.split(',').map((a: string) => a.trim())
         : [];
+
+    // Handle image upload to Cloudinary
+    let imageUrl: string | undefined;
+    let imagePublicId: string | undefined;
+
+    if (req.file) {
+      try {
+        const uploadResult = await uploadToCloudinary(req.file.buffer, {
+          folder: 'bus_images',
+          // Add bus registration number to filename for better organization
+          public_id: `bus_${registrationNumber.replace(/[^a-zA-Z0-9]/g, '_')}_${Date.now()}`
+        });
+        
+        imageUrl = uploadResult.url;
+        imagePublicId = uploadResult.publicId;
+      } catch (uploadError) {
+        console.error('Cloudinary upload failed:', uploadError);
+        return res.status(500).json({ error: 'Failed to upload image' });
+      }
+    }
+
+    const bus = new BusModel({
+      busModel,
+      registrationNumber,
+      type,
+      seats: finalSeats,
+      amenities: amenitiesArray,
+      status,
+      ...(imageUrl ? { image: imageUrl } : {}),
+      ...(imagePublicId ? { imagePublicId } : {}),
+      ...(finalSeatLayout ? { seatLayout: finalSeatLayout } : {}),
+    });
+
+    await bus.save();
+
+    const auth = new AuthModel({
+      name: `Agent for ${registrationNumber}`,
+      registrationNumber,
+      password: agentPassword,
+      role: 'agent',
+      busId: bus._id,
+    });
+
+    await auth.save();
+
+    res.status(201).json({ bus, auth });
+  } catch (error) {
+    console.error('Error creating bus:', error);
+    res.status(500).json({ error: 'Failed to create bus' });
   }
-  const file = (req as any).file as { filename: string } | undefined;
-  if (file) {
-    const baseUrl = `${req.protocol}://${req.get('host')}`;
-    update.image = `${baseUrl}/uploads/${file.filename}`;
+});
+
+// Update a bus
+router.put('/:id', upload.single('image'), handleMulterError, async (req: express.Request, res: express.Response) => {
+  try {
+    const { 
+      busModel, 
+      registrationNumber, 
+      type, 
+      seats, 
+      amenities, 
+      status, 
+      seatLayout 
+    } = req.body as any;
+    
+    const update: any = { busModel, registrationNumber, type, status, updatedAt: new Date() };
+
+    // Get the current bus to check for existing image
+    const currentBus = await BusModel.findById(req.params.id);
+    if (!currentBus) {
+      return res.status(404).json({ error: 'Bus not found' });
+    }
+
+    if (typeof seats !== 'undefined') update.seats = Number(seats);
+
+    if (seatLayout) {
+      try {
+        const parsedSeatLayout: SeatLayout = JSON.parse(seatLayout);
+        update.seatLayout = parsedSeatLayout;
+        if (parsedSeatLayout && parsedSeatLayout.totalSeats) {
+          update.seats = parsedSeatLayout.totalSeats;
+        }
+      } catch (e) {
+        console.error("Failed to parse seatLayout JSON:", e);
+        return res.status(400).json({ error: 'Invalid seatLayout format' });
+      }
+    }
+
+    if (typeof amenities !== 'undefined') {
+      update.amenities = Array.isArray(amenities)
+        ? amenities
+        : typeof amenities === 'string' && amenities.length
+          ? amenities.split(',').map((a: string) => a.trim())
+          : [];
+    }
+
+    // Handle image update
+    if (req.file) {
+      try {
+        // Upload new image to Cloudinary
+        const uploadResult = await uploadToCloudinary(req.file.buffer, {
+          folder: 'bus_images',
+          public_id: `bus_${registrationNumber?.replace(/[^a-zA-Z0-9]/g, '_') || currentBus.registrationNumber.replace(/[^a-zA-Z0-9]/g, '_')}_${Date.now()}`
+        });
+        
+        update.image = uploadResult.url;
+        update.imagePublicId = uploadResult.publicId;
+        
+        // Delete old image from Cloudinary if it exists
+        if (currentBus.imagePublicId) {
+          try {
+            await deleteFromCloudinary(currentBus.imagePublicId);
+            console.log(`Deleted old image: ${currentBus.imagePublicId}`);
+          } catch (deleteError) {
+            console.error('Failed to delete old image from Cloudinary:', deleteError);
+            // Don't fail the update if old image deletion fails
+          }
+        }
+      } catch (uploadError) {
+        console.error('Cloudinary upload failed:', uploadError);
+        return res.status(500).json({ error: 'Failed to upload new image' });
+      }
+    }
+
+    const bus = await BusModel.findByIdAndUpdate(req.params.id, update, { new: true });
+    if (!bus) {
+      return res.status(404).json({ error: 'Bus not found' });
+    }
+
+    res.json(bus);
+  } catch (error) {
+    console.error('Error updating bus:', error);
+    res.status(500).json({ error: 'Failed to update bus' });
   }
-  const bus = await BusModel.findByIdAndUpdate(req.params.id, update, { new: true });
-  if (!bus) return res.status(404).json({ error: 'Bus not found' });
-  res.json(bus);
 });
 
 // Delete a bus
-router.delete('/:id', async (req, res) => {
-  const bus = await BusModel.findByIdAndDelete(req.params.id);
-  if (!bus) return res.status(404).json({ error: 'Bus not found' });
-  res.json(bus);
+router.delete('/:id', async (req: express.Request, res: express.Response) => {
+  try {
+    const bus = await BusModel.findById(req.params.id);
+    if (!bus) return res.status(404).json({ error: 'Bus not found' });
+
+    // Delete image from Cloudinary if it exists
+    if (bus.imagePublicId) {
+      try {
+        await deleteFromCloudinary(bus.imagePublicId);
+        console.log(`Deleted image from Cloudinary: ${bus.imagePublicId}`);
+      } catch (deleteError) {
+        console.error('Failed to delete image from Cloudinary:', deleteError);
+        // Continue with bus deletion even if image deletion fails
+      }
+    }
+
+    // Delete the bus record
+    await BusModel.findByIdAndDelete(req.params.id);
+    
+    // Also delete the associated agent user
+    await AuthModel.findOneAndDelete({ busId: req.params.id });
+
+    res.json({ message: 'Bus and associated data deleted successfully', bus });
+  } catch (error) {
+    console.error('Error deleting bus:', error);
+    res.status(500).json({ error: 'Failed to delete bus' });
+  }
+});
+
+// Remove image from a bus (without deleting the bus)
+router.delete('/:id/image', async (req: express.Request, res: express.Response) => {
+  try {
+    const bus = await BusModel.findById(req.params.id);
+    if (!bus) return res.status(404).json({ error: 'Bus not found' });
+
+    if (!bus.imagePublicId) {
+      return res.status(400).json({ error: 'Bus has no image to delete' });
+    }
+
+    // Delete the image from Cloudinary
+    try {
+      await deleteFromCloudinary(bus.imagePublicId);
+      console.log(`Deleted image from Cloudinary: ${bus.imagePublicId}`);
+    } catch (deleteError) {
+      console.error('Failed to delete image from Cloudinary:', deleteError);
+      return res.status(500).json({ error: 'Failed to delete image from cloud storage' });
+    }
+
+    // Remove image references from database
+    const updatedBus = await BusModel.findByIdAndUpdate(
+      req.params.id, 
+      { 
+        $unset: { image: 1, imagePublicId: 1 }, 
+        updatedAt: new Date() 
+      }, 
+      { new: true }
+    );
+
+    res.json({ message: 'Image deleted successfully', bus: updatedBus });
+  } catch (error) {
+    console.error('Error deleting bus image:', error);
+    res.status(500).json({ error: 'Failed to delete bus image' });
+  }
+});
+
+// Get image transformations for a bus
+router.get('/:id/images', async (req: express.Request, res: express.Response) => {
+  try {
+    const bus = await BusModel.findById(req.params.id);
+    if (!bus) return res.status(404).json({ error: 'Bus not found' });
+    
+    if (!bus.imagePublicId) {
+      return res.json({ message: 'No image found for this bus' });
+    }
+
+    const imageUrls = {
+      original: bus.image,
+      thumbnail: generateTransformationUrl(bus.imagePublicId, BUS_IMAGE_TRANSFORMATIONS.thumbnail),
+      medium: generateTransformationUrl(bus.imagePublicId, BUS_IMAGE_TRANSFORMATIONS.medium),
+      large: generateTransformationUrl(bus.imagePublicId, BUS_IMAGE_TRANSFORMATIONS.large),
+    };
+
+    res.json({ imageUrls });
+  } catch (error) {
+    console.error('Error fetching bus images:', error);
+    res.status(500).json({ error: 'Failed to fetch bus images' });
+  }
 });
 
 export default router;

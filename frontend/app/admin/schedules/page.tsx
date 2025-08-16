@@ -106,15 +106,24 @@ export default function SchedulesPage() {
       id: 'actions',
       cell: ({ row }: { row: { original: BusSchedule } }) => {
         return (
-          <Button
-            variant="ghost"
-            onClick={() => {
-              setSelectedSchedule(row.original);
-              setIsFormOpen(true);
-            }}
-          >
-            Edit
-          </Button>
+          <>
+            <Button
+              variant="ghost"
+              onClick={() => {
+                setSelectedSchedule(row.original);
+                setIsFormOpen(true);
+              }}
+            >
+              Edit
+            </Button>
+            <Button
+              variant="destructive"
+              onClick={() => handleDeleteSchedule(row.original._id)}
+              className="ml-2"
+            >
+              Delete
+            </Button>
+          </>
         );
       },
     },

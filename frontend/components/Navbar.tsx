@@ -12,7 +12,7 @@ const Navbar = () => {
           {/* Logo Section */}    
           <Link href="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
             <div className="mt-6 rounded-lg flex items-center justify-center text-white font-bold  text-sm">
-             <Image width={100} height={100} src="/logo.png" alt="Logo" className=" " /> 
+             <Image width={200} height={200} src="/logo.png" alt="Logo" className="h-24 w-24 sm:h-24 sm:w-24 md:h-28" /> 
             </div>
              <div className="hidden sm:block">
               <h1 className="text-lg font-semibold leading-none text-gray-900">
@@ -24,7 +24,7 @@ const Navbar = () => {
             </div>
             {/* Mobile logo text */}
             <div className="sm:hidden">
-              <h1 className="text-base mr-10 font-semibold text-gray-900">
+              <h1 className="text-base font-semibold text-gray-900">
                 Suhani Travels
               </h1>
             </div>

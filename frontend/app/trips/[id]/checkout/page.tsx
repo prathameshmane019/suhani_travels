@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback ,useMemo} from 'react';
 import { CreditCard, User, Mail, Phone, ArrowLeft, Calendar } from 'lucide-react';
 import { api } from '@/lib/utils';
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
@@ -231,7 +231,9 @@ const CheckoutPage: React.FC = () => {
   const [boardingPoint, setBoardingPoint] = useState<IStop | null>(null);
   const [dropoffPoint, setDropoffPoint] = useState<IStop | null>(null);
   const tripId = params?.id as string;
-  const seatNumbers = searchParams?.get('seats')?.split(',').filter(Boolean) || [];
+  const seatNumbers = useMemo(() => {
+    return searchParams?.get('seats')?.split(',').filter(Boolean) || [];
+  }, [searchParams]);
 
   const [userId, setUserId] = useState<string | undefined>(undefined);
   // Fetch user data and pre-fill primary passenger details

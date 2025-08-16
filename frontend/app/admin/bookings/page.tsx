@@ -10,7 +10,7 @@ import { api } from '@/lib/utils';
 
 const BookingsPage = () => {
   const [bookings, setBookings] = useState<IBooking[]>([]);
-  const [filters, setFilters] = useState({
+  const [filters] = useState({
     dateRange: { from: '', to: '' },
     status: 'all',
   });

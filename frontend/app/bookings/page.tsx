@@ -425,14 +425,7 @@ const BookingsPage = () => {
     return filtered;
   };
 
-  const getBookingStats = () => {
-    const total = bookings.length;
-    const confirmed = bookings.filter(b => b.status === 'confirmed').length;
-    const completed = bookings.filter(b => b.status === 'completed').length;
-    const pending = bookings.filter(b => b.status === 'pending').length;
-
-    return { total, confirmed, completed, pending };
-  };
+  
 
   const LoadingSpinner = () => (
     <div className="flex flex-col items-center justify-center py-16">

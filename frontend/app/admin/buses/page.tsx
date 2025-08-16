@@ -30,7 +30,14 @@ const BusesPage = () => {
     // Fetch buses from backend
     useEffect(() => {
         api.get('/buses')
-            .then(res => setBuses(res.data))
+            .then(res => {
+                // Map _id to id for frontend consistency
+                const mappedBuses = res.data.map((bus: Bus & { _id: string }) => ({
+                    ...bus,
+                    id: bus._id,
+                }));
+                setBuses(mappedBuses);
+            })
             .catch(() => toast.error('Failed to fetch buses'));
     }, []);
 
@@ -40,7 +47,7 @@ const BusesPage = () => {
         try {
             // Build multipart form data for image upload
             const form = new FormData();
-            form.append('model', data.model);
+            form.append('busModel', data.busModel);
             form.append('registrationNumber', data.registrationNumber);
             form.append('type', data.type);
             form.append('seats', String(data.seats));
@@ -97,7 +104,7 @@ const BusesPage = () => {
     };
 
     const filteredBuses = buses.filter(bus => {
-        const matchesSearch = bus.model.toLowerCase().includes(filters.search.toLowerCase());
+        const matchesSearch = bus.busModel.toLowerCase().includes(filters.search.toLowerCase());
         const matchesType = !filters.type || filters.type === 'all' || bus.type === filters.type;
         const matchesStatus = !filters.status || filters.status === 'all' || bus.status === filters.status;
         return matchesSearch && matchesType && matchesStatus;
@@ -176,7 +183,7 @@ const BusesPage = () => {
                 onClose={() => setIsFormOpen(false)}
                 onSubmit={handleFormSubmit}
                 initialData={selectedBus ? {
-                    model: selectedBus.model,
+                    busModel: selectedBus.busModel,
                     registrationNumber: selectedBus.registrationNumber,
                     type: selectedBus.type,
                     seats: selectedBus?.seatLayout?.totalSeats,

@@ -12,25 +12,50 @@ import busSchedulesRouter from './routes/busSchedules';
 import authRouter from './routes/auth'; // Import auth router
 import homeRouter from './routes/home';
 import agentRouter from './routes/agent'; // Import agent router Import busAuth router
+import bannersRouter from './routes/banners';
 import auth from './middleware/auth'; // Import auth middleware
 import mongoose from 'mongoose';
 import path from 'path';
 
  import dotenv from 'dotenv';
-    dotenv.config(); // Load environment variables from .env file
+    dotenv.config();  
 
-    
-const MONGO_URI =  'mongodb://localhost:27017/suhani_bus';
- 
+const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/suhani_bus';
+
+if (!MONGO_URI) {
+  console.error('MongoDB URI is not defined. Please set MONGO_URI in your environment variables.');
+  process.exit(1);
+}
 const PORT = process.env.PORT || 4000
 mongoose.connect(MONGO_URI)
   .then(() => console.log('Connected to MongoDB'))
   .catch((err) => console.error('MongoDB connection error:', err));
 
-const app = express();
- 
+const app = express(); 
 
-app.use(cors());
+// CORS configuration - UPDATED
+const corsOptions = {
+  origin: process.env.NODE_ENV === 'production' 
+    ? [process.env.FRONTEND_URL ||   'https://suhanitravels.vercel.app']
+    : ['http://localhost:3000', 'http://localhost:3001' ],
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+  allowedHeaders: [
+    'Origin',
+    'X-Requested-With', 
+    'Content-Type',
+    'Accept',
+    'Authorization',
+    'Cache-Control',
+    'X-CSRF-Token',
+    'X-Api-Version'
+  ],
+  optionsSuccessStatus: 200
+};
+
+
+app.use(cors(
+  corsOptions));
 app.use(express.json());
 app.use(morgan('dev'));
 
@@ -44,6 +69,7 @@ app.use('/api/routes', routesRouter);
 app.use('/api/bus-schedules', busSchedulesRouter);
 app.use('/api/trips', tripsRouter);
 app.use('/api', homeRouter);
+app.use('/api/banners', bannersRouter);
 
 // Protected routes (require authentication)
 app.use('/api/bookings', bookingsRouter);

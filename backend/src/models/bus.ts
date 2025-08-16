@@ -8,14 +8,25 @@ export interface IBusDocument extends Document {
   registrationNumber: string;
   type: 'ac-sleeper' | 'non-ac-sleeper' | 'ac-seater' | 'non-ac-seater';
   seats: number;
-  amenities: string[];
-  image?: string;
+  amenities: string[]; 
+  image?: string; // Cloudinary URL
+  imagePublicId?: string; // Cloudinary public ID for deletion/transformation
   status: 'active' | 'inactive' | 'maintenance';
   rating: number;
   seatLayout?: SeatLayout;
   createdAt: Date;
   updatedAt: Date;
 }
+// Extended interface for API responses with additional properties
+export interface IBusWithImageUrls extends IBusDocument {
+  imageUrls?: {
+    original?: string;
+    thumbnail: string;
+    medium: string;
+    large: string;
+  };
+}
+
 
 const BusSchema = new Schema<IBusDocument>({
   busModel: { type: String, required: true },
@@ -27,7 +38,8 @@ const BusSchema = new Schema<IBusDocument>({
   },
   seats: { type: Number, required: true, min: 1 },
   amenities: { type: [String], default: [] },
-  image: { type: String },
+  image: { type: String }, 
+  imagePublicId: {type:String}, // Cloudinary public ID for deletion/transformation
   status: { 
     type: String, 
     required: true, 
@@ -50,8 +62,24 @@ const BusSchema = new Schema<IBusDocument>({
   updatedAt: { type: Date, default: Date.now },
 });
 
-export const BusModel = mongoose.model<IBusDocument>('Bus', BusSchema);
 
+
+ 
+
+// Pre-update middleware
+BusSchema.pre('findOneAndUpdate', function(next) {
+  const update = this.getUpdate() as any;
+  
+  // If image is being removed, also remove publicId
+  if (update.$unset && update.$unset.image && !update.$unset.imagePublicId) {
+    update.$unset.imagePublicId = 1;
+  }
+  
+  next();
+});
+
+export const BusModel = mongoose.model<IBusDocument>('Bus', BusSchema);
+ 
 // Route Schema
 export interface IRouteDocument extends Document {
   name: string;

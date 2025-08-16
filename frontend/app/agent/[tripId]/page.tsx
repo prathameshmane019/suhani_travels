@@ -11,6 +11,8 @@ import NewBookingForm from '@/components/agent/NewBookingForm';
 import PassengerTable from '@/components/agent/PassengerTable';
 import PassengerCard from '@/components/agent/PassengerCard';
 import SortOptions from '@/components/agent/SortOptions';
+import Link from 'next/link';
+import { AxiosError } from 'axios';
 
 interface PassengerDetails {
   name: string;
@@ -19,25 +21,24 @@ interface PassengerDetails {
   email?: string;
 }
 
-interface Booking {
-  _id: string;
-  tripId: string;
-  seatNumbers: string[];
-  passengerDetails: PassengerDetails[];
-  totalPrice: number;
-  bookingDate: string;
-  status: 'pending' | 'confirmed' | 'cancelled';
-  paymentStatus?: 'pending' | 'completed' | 'failed' | 'refunded';
-  paymentMethod?: string;
-  transactionId?: string; 
-  notes?: string;
-  boardingPoint?: { name: string; sequence: number; };
-  dropoffPoint?: { name: string; sequence: number; };
-  userId?: string;
-}
+ 
 
 type SortBy = 'seat' | 'sequence' | 'name';
 type SortOrder = 'asc' | 'desc';
+
+interface NewBookingData {
+  seatNumbers: string;
+  passengerName: string;
+  passengerGender: 'male' | 'female' | 'other';
+  passengerPhone: string;
+  passengerEmail: string;
+  totalPrice: string; 
+  paymentMethod: string;
+  boardingPointName: string;
+  boardingPointSequence: string;
+  dropoffPointName: string;
+  dropoffPointSequence: string;
+}
 
 const AgentTripPassengersPage = () => {
   const { tripId } = useParams();
@@ -47,10 +48,10 @@ const AgentTripPassengersPage = () => {
   const [sortBy, setSortBy] = useState<SortBy>('sequence');
   const [sortOrder, setSortOrder] = useState<SortOrder>('asc');
   const [showNewBookingForm, setShowNewBookingForm] = useState(false);
-  const [newBookingData, setNewBookingData] = useState({
+  const [newBookingData, setNewBookingData] = useState<NewBookingData>({
     seatNumbers: '',
     passengerName: '',
-    passengerGender: 'male' as 'male' | 'female' | 'other',
+    passengerGender: 'male',
     passengerPhone: '',
     passengerEmail: '',
     totalPrice: '',
@@ -72,7 +73,7 @@ const AgentTripPassengersPage = () => {
   }, [tripId, fetchTripBookings]);
 
   const sortedBookings = useMemo(() => {
-    let sortableBookings = [...tripBookings];
+    const sortableBookings = [...tripBookings];
 
     if (sortBy === 'seat') {
       sortableBookings.sort((a, b) => {
@@ -96,18 +97,18 @@ const AgentTripPassengersPage = () => {
     return sortableBookings;
   }, [tripBookings, sortBy, sortOrder]);
 
-  const handleNewBookingChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement> | { target: { name: string; value: any } }) => {
+  const handleNewBookingChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement> | { target: { name: string; value: string | number | boolean } }) => {
     const { name, value } = e.target;
 
     if (name === 'boardingPointName') {
-      const selectedPoint = selectedTrip?.route?.stops?.find(p => p.name === value);
+      const selectedPoint = selectedTrip?.route?.stops?.find(p => p.name === value as string);
       if (selectedPoint) {
-        setNewBookingData(prev => ({ ...prev, boardingPointName: value, boardingPointSequence: selectedPoint.sequence.toString() }));
+        setNewBookingData(prev => ({ ...prev, boardingPointName: value as string, boardingPointSequence: selectedPoint.sequence.toString() }));
       }
     } else if (name === 'dropoffPointName') {
-      const selectedPoint = selectedTrip?.route.stops.find(p => p.name === value);
+      const selectedPoint = selectedTrip?.route.stops.find(p => p.name === value as string);
       if (selectedPoint) {
-        setNewBookingData(prev => ({ ...prev, dropoffPointName: value, dropoffPointSequence: selectedPoint.sequence.toString() }));
+        setNewBookingData(prev => ({ ...prev, dropoffPointName: value as string, dropoffPointSequence: selectedPoint.sequence.toString() }));
       }
     } else {
       setNewBookingData(prev => ({ ...prev, [name]: value }));
@@ -160,16 +161,20 @@ const AgentTripPassengersPage = () => {
         dropoffPointSequence: '',
       });
       fetchTripBookings(selectedTrip._id);
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Error creating booking:', err);
-      toast.error(err.response?.data?.message || 'Failed to create booking.');
+      if (err instanceof AxiosError && err.response?.data?.message) {
+        toast.error(err.response.data.message);
+      } else {
+        toast.error('Failed to create booking.');
+      }
     }
   };
 
   if (!selectedTrip) {
     return (
       <div className="p-4 text-center">
-        <p>Loading trip details or trip not found. Please select a trip from the <a href="/agent" className="text-blue-500 hover:underline">Trips page</a>.</p>
+        <p>Loading trip details or trip not found. Please select a trip from the <Link href="/agent" className="text-blue-500 hover:underline">Trips page</Link>.</p>
       </div>
     );
   }

@@ -21,7 +21,7 @@ const SortOptions: React.FC<SortOptionsProps> = ({ sortBy, setSortBy, sortOrder,
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="outline" className="flex items-center gap-2">
-            Sort By <ChevronDown className="h-4 w-4" />
+            Sort By: {sortBy.charAt(0).toUpperCase() + sortBy.slice(1)} <ChevronDown className="h-4 w-4" />
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="start">

@@ -5,7 +5,7 @@ import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/lib/AuthContext'; //
 import Link from 'next/dist/client/link';
-import { Home, HomeIcon } from 'lucide-react';
+import { HomeIcon } from 'lucide-react';
 
 export const AuthStatus = () => {
   const { user, loading, logout } = useAuth(); // Use useAuth hook
@@ -84,11 +84,11 @@ export const AuthStatus = () => {
         < HomeIcon />
       </Link>
       <Button
-        onClick={() => router.push('/bookings')}
+        onClick={() => router.push('/trip')}
         className=""
         size={'sm'}
       >
-        Book Now
+        Book
       </Button>
       <Button variant="ghost" size="sm" onClick={() => router.push('/login')}>Login</Button>
       <Button variant="ghost" size="sm" onClick={() => router.push('/register')}>Register</Button>

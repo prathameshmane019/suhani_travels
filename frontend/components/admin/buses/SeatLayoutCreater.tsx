@@ -1,5 +1,4 @@
-"use client"
-
+"use client" 
 import type React from "react"
 
 import { useState, useCallback } from "react"
@@ -41,9 +40,20 @@ export function SeatLayoutCreator({ onSave, initialLayout, className }: SeatLayo
         return
       }
 
-      const seatId = `${row}-${column}`
+      // Determine the next sequential seat ID
+      let nextSeatId: string;
+      if (existingSeatIndex === -1) { // Only generate new ID if adding a new seat
+        const maxSeatNumber = seats.reduce((max, seat) => {
+          const seatNum = parseInt(seat.id);
+          return !isNaN(seatNum) ? Math.max(max, seatNum) : max;
+        }, 0);
+        nextSeatId = (maxSeatNumber + 1).toString();
+      } else {
+        nextSeatId = seats[existingSeatIndex].id; // Keep existing ID if editing
+      }
+
       const newSeat: SeatPosition = {
-        id: seatId,
+        id: nextSeatId,
         row,
         column,
         type: selectedTool,
@@ -86,7 +96,7 @@ export function SeatLayoutCreator({ onSave, initialLayout, className }: SeatLayo
   const generateStandardLayout = (event: React.MouseEvent) => {
     event.stopPropagation()
     const newSeats: SeatPosition[] = []
-    let seatNumber = 1
+    let currentSeatNumber = 1
 
     for (let row = 0; row < rows; row++) {
       for (let col = 0; col < columns; col++) {
@@ -94,7 +104,7 @@ export function SeatLayoutCreator({ onSave, initialLayout, className }: SeatLayo
         if (columns === 4 && (col === 1 || col === 2)) {
           if (col === 1) {
             newSeats.push({
-              id: `${row}-${col}`,
+              id: `Aisle-${row}-${col}`,
               row,
               column: col,
               type: "empty",
@@ -104,12 +114,12 @@ export function SeatLayoutCreator({ onSave, initialLayout, className }: SeatLayo
         }
 
         newSeats.push({
-          id: `${row}-${col}`,
+          id: currentSeatNumber.toString(),
           row,
           column: col,
           type: "regular", 
         })
-        seatNumber++
+        currentSeatNumber++
       }
     }
 

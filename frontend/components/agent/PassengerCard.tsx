@@ -1,9 +1,7 @@
 
 'use client';
 import React from 'react';
-import { Phone, Pencil, Trash2 } from 'lucide-react';
-import { toast } from 'sonner';
-
+import { Phone } from 'lucide-react'; 
 interface PassengerDetails {
   name: string;
   gender: 'male' | 'female' | 'other';
