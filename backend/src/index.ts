@@ -26,6 +26,9 @@ if (!MONGO_URI) {
   console.error('MongoDB URI is not defined. Please set MONGO_URI in your environment variables.');
   process.exit(1);
 }
+
+console.log(MONGO_URI);
+
 const PORT = process.env.PORT || 4000
 mongoose.connect(MONGO_URI)
   .then(() => console.log('Connected to MongoDB'))
@@ -37,6 +40,7 @@ const app = express();
 const corsOptions = {
   origin: process.env.NODE_ENV === 'production' 
     ? [process.env.FRONTEND_URL ||   'https://suhanitravels.vercel.app']
+  
     : ['http://localhost:3000', 'http://localhost:3001' ],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
